@@ -2,10 +2,9 @@
 layout: post
 title: "A post"
 date: 2012-05-22
-excerpt: "We live in a society."
+excerpt: "Sample post."
 tags: [sample post]
-comments: true
+comments: false
 ---
 
-Yeet
-
+Sample text.

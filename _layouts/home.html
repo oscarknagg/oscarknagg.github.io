@@ -10,7 +10,7 @@ layout: compress
     {% include head.html %}
 </head>
 <body>
-    {% include nav.html %}
+<!--    {% include nav.html %}-->
     <!-- Header -->
     <header class="header flex" role="banner">
         <div class="container animated fadeIn">
@@ -28,8 +28,7 @@ layout: compress
                         <a href="{{ site.url }}">
                         	<p style="font-size:1rem;font-weight:300">{{ site.bio }}</p>
 			            </a>
-                    </h3>
-                    {% include social-links.html %}
+<!--                    </h3>-->
                   <hr class="hr-line">
                   <h3 class="title">
                          <a class="btn zoombtn" href="{{ site.url }}/about">
@@ -38,10 +37,23 @@ layout: compress
                          <a class="btn zoombtn" href="{{ site.url }}/posts">
                          Posts
                          </a>
-                         <a class="btn zoombtn" href="{{ site.url }}/projects">
-                         Projects
-                         </a>
                  </h3>
+                {% include social-links.html %}
+
+<!--                I should include a post list on the home page when I have some-->
+<!--                <div class="post-list">-->
+<!--                    {% for post in site.posts %}-->
+<!--                        {% if post.project == null %}-->
+<!--                    <ul>-->
+<!--                        <li class="wow fadeInLeft" data-wow-duration="1.5s">-->
+<!--                            <a class="zoombtn" href="{{ site.url }}{{ post.url }}">{{ post.title }}</a>-->
+<!--                            <p>{{ post.excerpt }}</p>-->
+<!--                            <a href="{{ site.url }}{{ post.url }}" class="btn zoombtn">Read More</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                        {% endif %}-->
+<!--                    {% endfor %}-->
+<!--                </div>-->
             </div>
         </div>
     </header>

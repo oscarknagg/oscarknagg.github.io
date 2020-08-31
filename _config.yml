@@ -1,15 +1,15 @@
 # Site
 title:              Oscar Knagg
-bio:                'I am meme man.'
+bio:                'Builder of novel things.'
 description:        "Oscar is a guy who spent too much time choosing a background image."
 reading_time:       true
 words_per_minute:   200
 logo:               'assets/img/me.jpg'
 background:         'assets/img/background-1.jpg'
 tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
-locale:             en_US
-url:                http://oscar.kna.gg
-#url:                http://127.0.0.1:4000/
+locale:             en_GB
+#url:                http://oscar.kna.gg
+url:                http://127.0.0.1:4000/
 
 # Jekyll
 permalink:          /:title/
@@ -27,7 +27,7 @@ sass:
   style:            compressed
 
 # Comments
-disqus_shortname:   taylantatli
+#disqus_shortname:   taylantatli
 
 # Social
 # if you don't have any of social below, comment the line.
@@ -42,7 +42,7 @@ disqus_shortname:   taylantatli
 #twitter:            username
 #facebook:           username
 github-url:         oscarknagg
-#stackoverflow:     123456/username   from a "http://stackoverflow.com/users/123456/username" link
+stackoverflow:     13835555/oscar-knagg
 linkedin:          oscarknagg
 #xing:              username
 #instagram:          username
