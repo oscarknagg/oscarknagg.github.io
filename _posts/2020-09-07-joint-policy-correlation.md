@@ -100,7 +100,7 @@ Plants respawn at a fixed frequency that decreases with increased map size.
 
 <center><i>`small2`, `small3` and `small4` maps for the `harvest` environment.</i></center>
 
-Both environments are implemented (see my earlier [blog post](https://towardsdatascience.com/learning-to-play-snake-at-1-million-fps-4aae8d36d2f1))) 
+Both environments are implemented (see my earlier [blog post](https://towardsdatascience.com/learning-to-play-snake-at-1-million-fps-4aae8d36d2f1))
 purely with vectorised matrix operations in PyTorch and hence can be run at high levels of batching on a GPU, 
 the environment batch size used in this work is 128. 
 The architecture of all agents is a 3 layer convolutional network with strides (2, 1, 1) and kernel sizes (4, 5, 3) 

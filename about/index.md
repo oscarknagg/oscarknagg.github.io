@@ -5,6 +5,8 @@ tags: [about]
 date: 2020-09-01
 comments: false
 ---
+
+<center><a href="https://drive.google.com/file/d/19gVHmUpm_dQtIIkR_ykHfZhVTHO4IXxW/view?usp=sharing"><b>Résumé</b></a></center>
     
 I'm currently employed at [Busuu](https://www.busuu.com/), a popular language learning app. 
 I've built many things there, 
