@@ -2,12 +2,25 @@
 layout: post
 title: "Measuring overfitting in multi-agent reinforcement learning"
 date: 2020-09-07
-excerpt: "Sample post."
+excerpt: "While it is possible to use self-play to learn effective policies with little human input, agents can get stuck in local optima
+and overfit to opponent's policies."
 tags: [reinforcement learning, machine learning]
 comments: false
 ---
 
-Abstract
+Self-play in reinforcement learning is a powerful yet tricky to use tool.
+While it is possible to learn effective policies with little human input, agents can get stuck in local optima
+and overfit to opponent's policies.
+In this blog post I use (and extend) a recently developed metric for measuring overfitting in multi-agent
+reinforcement learning - _joint policy correlation_ - to quantify the policy improvement from two
+simple modifications to vanilla self-play.
+The first improvement is early-stopping, a ubiquitous method from supervised learning where training is 
+stopped before test loss starts to increase.
+The second improvement is pool-training, where the self-play opponent is randomly swapped out from a 
+pool of opponent policies (that are being trained concurrently).
+The combination of these two simple improvements yields a reduction in overfitting that is comparable to 
+more complex methods. 
+
 
 # Introduction
 
@@ -94,6 +107,7 @@ The architecture of all agents is a 3 layer convolutional network with strides (
 followed by a flattening and Gated Recurrent Unit. 
 All agents are trained with PPO.
 
+
 # Results
 ## Early stopping
 
@@ -148,6 +162,12 @@ leveraging the exploration of other agents to reach a greater total number of pl
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/pool-size-improvement.png)
 
 
+## Visualising joint policy correlation
+
+TODO: need more GIFs
+
 # Discussion
+
+TODO
 
 
