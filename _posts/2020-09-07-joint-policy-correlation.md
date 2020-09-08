@@ -231,7 +231,10 @@ This problem could be removed by using a single pool for all identical players. 
 `small2` map as there is line of sight between respawn points allowing defender-like policies to tag other agents 
 without moving.
 
-![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/attacker-defender.gif) ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/attacker-attacker.gif) ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/defender-defender.gif)
+
+|               |          |               |
+|---------------|----------|---------------|
+| ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/attacker-defender.gif)   | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/attacker-attacker.gif) | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/defender-defender.gif) |
 
 <center><i>Attacker/defender, attacker/attacker and defender/defender matchups respectively..</i></center>
 
