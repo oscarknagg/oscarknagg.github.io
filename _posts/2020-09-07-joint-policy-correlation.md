@@ -120,7 +120,7 @@ then resolved in a random order.
 
 <center><i>`small2`, `small3` and `small4` maps for the `laser_tag` environment.</i></center>
 
-The second environment is `harvest` which has the same actions as laser_tag but the “fire” action is replaced with a 
+The second environment is `harvest` which has the same actions as `laser_tag` but the “fire” action is replaced with a 
 “harvest” action. 
 Plants (represented by a dark green square) are scattered throughout the environment and if both agents stand within 1 
 square of a fruit and simultaneously perform the “harvest” action then the fruit will disappear and both agents 
@@ -171,11 +171,6 @@ opponent but a pool of opponents, randomly swapping opponents in each episode.
 To maintain the same generality to non-symmetric games that DCH does I implemented agent pool training with separate
 pools for each player even though both of my 2-player environments are symmetric, this had some negative 
 consequences (see Discussion).
-The generalisation ability of agents trained by pool training can be assessed by examining a JPC matrix as before, 
-however in the pool training case some off-diagonal entries can contain returns of two agents which have co-trained. 
-Hence, I generalise JPC to block-diagonal JPC where diagonal (i.e. train) return becomes block-diagonal return which 
-is the mean of block-diagonal entries with a block size of N-pool. 
-Off-diagonal (i.e. test) return is simply the mean of entries not in the block diagonal. 
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/block-diagonal-jpc-matrix.png)
 <center><i>
@@ -184,22 +179,31 @@ darker red indicates greater return.
 The return difference between agents trained in the same pool and in other pools can be seen clearly.
 </i></center>
 
-The figure below summarises the pool-training results, 
-each plot in the figure shows the diagonal and off-diagonal reward for agents trained in different pool sizes. 
-Note that the off-diagonal return increases with pool size in every case except laser_tag-small2. 
-The diagonal reward stays roughly constant except for the interesting Harvest-small4 case, as D and O both increase. 
+The generalisation ability of agents trained by pool training can be assessed by examining a JPC matrix as before, 
+however in the pool training case some off-diagonal entries can contain returns of two agents which have co-trained. 
+Hence, I generalise JPC to _block-diagonal JPC_ where diagonal (i.e. train) return becomes block-diagonal return which 
+is the mean of block-diagonal entries with a block size of N-pool. 
+Off-diagonal (i.e. test) return is simply the mean of entries not in the block diagonal. 
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/pool-size-improvement.png)
+
+Each plot in the figure above shows the diagonal and off-diagonal reward for agents trained in different pool sizes. 
+Note that the off-diagonal return increases with pool size in every case except `laser_tag`/`small2`. 
+The diagonal reward stays roughly constant except for the interesting `harvest`/`small4` case, as \\(D\\) and \\(O\\) both increase. 
 Visual inspection of training runs shows that the reason is for this that the diversity of agents within a pool drives improved exploration. 
 In a pool size of 1 a pair of agents typically converges into following a fixed route between 3 plants in the environment, 
 these routes typically differ between training runs. 
 In pool training agents have to learn to co-operate with agents that have learnt a different path between the plants, 
 leveraging the exploration of other agents to reach a greater total number of plants.
 
-![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/pool-size-improvement.png)
+|               |          |
+|---------------|----------|
+| ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/harvest-small4-central-path.gif.gif)   | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/harvest-small4-outer-path.gif.gif) |
 
-
-## Visualising joint policy correlation
-
-TODO: need more GIFs
+<center><i>
+Central (left) and outer (right) paths learnt by agents in different runs. 
+In no runs did agents learn a path to collect all of the plants.
+</i></center>
 
 # Discussion
 
@@ -236,26 +240,26 @@ without moving.
 |---------------|----------|---------------|
 | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/attacker-defender.gif)   | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/attacker-attacker.gif) | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/defender-defender.gif) |
 
-<center><i>Attacker/defender, attacker/attacker and defender/defender matchups respectively..</i></center>
+<center><i>Attacker/defender, attacker/attacker and defender/defender matchups respectively.</i></center>
 
 The observation most surprising to me is that an agent, trained on a toy multi-agent task can fail to generalise when 
 interacting with another agent trained on the same task with identical architecture and training parameters.
-The reduction in return can be >50% (harvest/small4). 
+The reduction in return can be >50% (`harvest`/`small4`). 
 As the trend seems to be increased overfitting with increased complexity of the task I would expect more complex tasks
 to suffer even more from this problem. However this tentatively appears not to be the case as Open AI 5 
 can [generalise to human teammates](https://openai.com/blog/openai-five-defeats-dota-2-world-champions/).
 
 | Environment   | Map      | \\( R_{-} \\), this blog | \\( R_{-} \\), DCH |
-|---------------|----------|---------------|---------------------|
-| `laser_tag`   | `small2` | 0.382         | **0.055**           |
-| `laser_tag`   | `small3` | 0.083         | **0.082**           |
-| `laser_tag`   | `small4` | **0.040**     | 0.150               |
-| `harvest`     | `small2` | 0.070         | -                   |
-| `harvest`     | `small3` | 0.032         | -                   |
-| `harvest`     | `small4` | 0.138         | -                   |
+|---------------|----------|--------------------------|--------------------|
+| `laser_tag`   | `small2` | 0.382                    | **0.055**          |
+| `laser_tag`   | `small3` | **0.083**                | **0.082**          |
+| `laser_tag`   | `small4` | **0.040**                | 0.150              |
+| `harvest`     | `small2` | 0.070                    | -                  |
+| `harvest`     | `small3` | 0.032                    | -                  |
+| `harvest`     | `small4` | 0.138                    | -                  |
 
 <center><i>
-Summary of R_ values from this blog post and \[Deepmind-MaRL\]
+Summary of R_ values from this blog post and [Deepmind-MaRL]
 </i></center>
 
 Perhaps it's the toy nature of these tasks that lend themselves so well to overfitting. 
