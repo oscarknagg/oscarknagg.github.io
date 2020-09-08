@@ -198,7 +198,7 @@ leveraging the exploration of other agents to reach a greater total number of pl
 
 |               |          |
 |---------------|----------|
-| ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/harvest-small4-central-path.gif.gif)   | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/harvest-small4-outer-path.gif.gif) |
+| ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/harvest-small4-central-path.gif)   | ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2020-09-07-joint-policy-correlation/harvest-small4-outer-path.gif) |
 
 <center><i>
 Central (left) and outer (right) paths learnt by agents in different runs. 
