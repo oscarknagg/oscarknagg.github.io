@@ -83,7 +83,7 @@ Einstein summation and its uses in NumPy/PyTorch/Tensorflow.
 
 <center><i>
 The full head movement procedure. 
-See [this gist](https://gist.github.com/oscarknagg/863602483afc83d698ce399a67eb21d4) for a minimal implementation.
+See <a href="https://gist.github.com/oscarknagg/863602483afc83d698ce399a67eb21d4">this gist</a> for a minimal implementation.
 </i></center>
 
 Now that we moved the head we need to move the body. 
@@ -95,8 +95,8 @@ We then add this copy to the head channel which creates a new front position for
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2019-05-20-snake-1million-fps/body-movement.png)
 
 <center><i>
-Body movement procedure. 
-The input action is left. See [this gist](https://gist.github.com/oscarknagg/627dbcfe020cc63dd47d57e1cf6b076c) for a minimal implementation.
+Body movement procedure, the input action is left. 
+See <a href="https://gist.github.com/oscarknagg/627dbcfe020cc63dd47d57e1cf6b076c">this gist</a> for a minimal implementation.
 </i></center>
 
 ## Environment simulation speed
