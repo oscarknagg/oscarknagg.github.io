@@ -316,6 +316,5 @@ Or perhaps I will implement a multi-agent snake environment in order to answer O
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2019-05-20-snake-1million-fps/slitherin.gif)
 
 <center><i>
-Edit: a mutli-agent [slither.io](http://slither.io/) style environment I made for fun.
+Edit: a mutli-agent <a href="http://slither.io/">slither.io</a> style environment I made for fun.
 </i></center>
-
