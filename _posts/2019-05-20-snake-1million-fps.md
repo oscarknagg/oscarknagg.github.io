@@ -18,7 +18,7 @@ This post is divided into three parts.
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2019-05-20-snake-1million-fps/demo.gif)
 
-_Code for this project is available at https://github.com/oscarknagg/wurm/tree/medium-article-1_ 
+_Code for this project is available at [https://github.com/oscarknagg/wurm/tree/medium-article-1]_ 
 
 # Snake - vectorized
 
