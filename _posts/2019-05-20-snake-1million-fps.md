@@ -307,6 +307,8 @@ In some runs it will perform quite well, while in others it will die almost imme
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2019-05-20-snake-1million-fps/relational-transfer.gif)
 
+# Conclusion
+
 In this project I’ve seen firsthand the slowness of deep reinforcement learning and come up with a neat, if brute-force way of getting around it. 
 I’ve also experienced the brittle nature of deep RL by observing failed transfer between quite similar environments.
 
