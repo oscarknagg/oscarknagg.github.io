@@ -209,19 +209,44 @@ Elder Signs.
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/success-probability-distribution.png)
 
-- Talk about chart above
-    - Top-line is the 5/6 percentile i.e. about the best adventure in a draw of 6
-- Matrix of n-symbols vs item-setup 
-- Can I make it even simpler?
-    - i.e. just number of symbols + some second order effects such as S vs 1/2/3/4
-    - Matrix of n-symbols vs item-setup  
-- Rule of thumb for some effects such as 
-    - Ordered vs unordered
-    - Terror: fail this adventure
-    - Can I factor out a substitution rule for S/1/2/3/4
-- Rule of thumb I've used is to count number of total dice needed to complete
-    - What about second order effects? Is an S/SSS easier than SS/SS?
+- Top-line is the 5/6 percentile i.e. about the best adventure in a draw of 6
+    
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/min-green-dice-heuristic.png)
 
+- Minimum number of green dice to complete adventure as a heuristic
+- Interesting outliers
+    - min dice = 3
+        - something_has_broken_free, ordered + terror: immediately fail
+        - you_become_that_which_you_fear_most+ominous_portents: Triple task
+        - did_you_hear_that: Terror discard all terror
+        - prized_display+just_sign_here: S/S/S task
+    - min dice = 4
+        - it_s_quiet: 12
+        - koi_pond: Terror: immediately fail
+        -
+    
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/cheat-sheet.png)
+
+- Success probability cheatsheet
+
+
+### Influencing factors
+
+- Concentration of symbols
+    - Do some "theoretical" simulations on dummy tasks
+        - SS vs S/S
+        - SSS vs SS/S vs S/S/S
+        - SSSS vs SSS/S vs SS/SS vs SS/S/S
+- Investigation easier than symbols
+    - Result: Linear regression on symbols + investigation count to predict success proba weights 3.25:1
+    - Simulations
+        - SS vs S3 vs 6
+- Ordered vs unordered
+    - Unordered vs ordered for some representative tasks
+        - SS/SS
+        - SS/S
+        - S/S/S
 
 ## Adventure tier list
 
@@ -229,6 +254,30 @@ Elder Signs.
 
 - Talk about this chart
 - Give examples of high/low expected return cards
+
+S-tier
+- Great hall of Celeano: Great rewards, middling difficulty but best of all is that there is a minimal failure penalty
+- The elder sign: similar to above
+- The dreamlands: really easy, few penalties so its basically an elder sign on a plate
+
+A-tier
+
+- Yuggoth: Amazing rewards with middle of the road penalties. However you need to be well prepared to attempt it which keeps it out of S
+- Grazed writings: a very easy elder with few penalties. However less good peripheral rewards than the dreamlands
+- Sudden Attack: Relatively easy, good rewards
+
+B-tier
+
+- Forgotten knowledge:
+
+
+Trash tier
+
+- Please do not touch the exhibits: Doom token terror effect and penalty
+- Light's out: Incredibly difficult adventure for 1 elder sign. The fact that the penalty is a doom token and the max prob
+    of success is < 0.5 even in the best scenario means this card never works out positive in expectation
+- Too quiet:
+- It's quiet
 
 
 # Results - understanding mechanics
