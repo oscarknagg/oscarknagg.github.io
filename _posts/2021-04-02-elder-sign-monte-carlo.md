@@ -5,7 +5,7 @@ date: 2020-09-07
 excerpt: "While it is possible to use self-play to learn effective policies with little human input, agents can get stuck in local optima
 and overfit to opponent's policies."
 tags: [reinforcement learning, machine learning]
-comments: true
+comments: false
 ---
 
 Self-play in reinforcement learning is a powerful yet tricky to use tool.
