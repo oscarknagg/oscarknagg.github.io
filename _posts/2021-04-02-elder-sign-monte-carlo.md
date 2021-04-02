@@ -4,8 +4,10 @@ title: "A Monte Carlo analysis of the board game Elder Sign"
 date: 2021-04-02
 excerpt: "Sample text."
 tags: [monte carlo, gaming]
-comments: true
+comments: false
 ---
+
+*Status: WIP*
 
 Elder Sign is a Lovecraft-themed co-operative board game that I've been playing a lot of during the UK's
 second lockdown.
@@ -202,8 +204,13 @@ earlier you care more about items but when you're within striking distance of vi
 Elder Signs.
 
 # Results - adventures
-## Adventure difficulty cheat sheet
+## Adventure difficulties
 
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/success-probability-distribution.png)
+
+- Talk about chart above
+    - Top-line is the 5/6 percentile i.e. about the best adventure in a draw of 6
 - Matrix of n-symbols vs item-setup 
 - Can I make it even simpler?
     - i.e. just number of symbols + some second order effects such as S vs 1/2/3/4
@@ -218,12 +225,25 @@ Elder Signs.
 
 ## Adventure tier list
 
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/expected-return-distribution.png)
+
+- Talk about this chart
+- Give examples of high/low expected return cards
+
 
 # Results - understanding mechanics
 
 ## Dice vs clues
 
+- Can extract relevant information from first success probability cdf chart
+- Give a few charts of success probabilities for median card under defauly, yellow, red, clue
+- Do I think shop prices are justified
+
 ## Focusing, is it a big deal?
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/focus-success-probability-boost.png)
+
+- Yes, see chart above
 
 # Conclusion
 
