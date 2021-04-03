@@ -13,7 +13,7 @@ url:                https://oscar.kna.gg
 
 # Jekyll
 permalink:          /:title/
-markdown:           kramdown
+markdown:           CommonMarkGhPages
 highlighter:        rouge
 kramdown:
   auto_ids:         true

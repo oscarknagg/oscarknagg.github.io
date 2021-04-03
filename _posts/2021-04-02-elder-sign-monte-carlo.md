@@ -118,32 +118,32 @@ To help solidify this in your mind, here's an example of completing a task from 
 If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseudocode.
 
 <details>
-<summary>Click to expand.</summary>
-<p>
-```
-def attempt_adventure(tasks, dice, clues)
-    while len(dice) > 0 and len(tasks) > 0:
-        dice_result: List[Symbol] = dice.roll()
-        matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
-        if len(matched_tasks) > 0:
-            completed_task, used_dice = select_task_to_complete(matched_tasks)
-            dice.remove(used_dice)
-            tasks.pop(completed_task)
-        else:
-            if clues > 0:
-                # Clues let's
-                clue_policy(dice)
-                continue
+    <summary>Adventure attempt pseudocode.</summary>
+
+    ```
+    def attempt_adventure(tasks, dice, clues)
+        while len(dice) > 0 and len(tasks) > 0:
+            dice_result: List[Symbol] = dice.roll()
+            matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
+            if len(matched_tasks) > 0:
+                completed_task, used_dice = select_task_to_complete(matched_tasks)
+                dice.remove(used_dice)
+                tasks.pop(completed_task)
+            else:
+                if clues > 0:
+                    # Clues let's
+                    clue_policy(dice)
+                    continue
+                    
+                focus_policy(dice)
+                dice.pop()  # Remove one dice
                 
-            focus_policy(dice)
-            dice.pop()  # Remove one dice
-            
-        if len(tasks) == 0:
-            return SUCCESS
-        else:
-            return FAILURE
-\```
-</p>
+            if len(tasks) == 0:
+                return SUCCESS
+            else:
+                return FAILURE
+    ```
+
 </details>
 
 #### Randomness in adventures
