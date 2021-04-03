@@ -26,9 +26,10 @@ There are three important types of object in Elder Sign; Investigators, Adventur
 ## The Ancient One
 
 This is the big bad guy you are working together to defeat, there's a selection of these with various difficulties
-including Lovecraft favourites such as Cthulu and Azathoth as well as some invented for Elder Sign with a similar vibe.
-A single playthrough involves only one Ancient One and ends in a loss when the Ancient One acquires a certain number
-of Doom Tokens and conversely ends in a victory when a certain number (typically around 10) of Elder Signs are placed 
+including Lovecraft favourites such as Cthulu and Azathoth as well as some newly invented ones with a similar vibe.
+A single playthrough involves only a single Ancient One and ends in defeat when the Ancient One acquires a certain number
+of Doom Tokens.
+Conversely, the game ends in a victory when a certain number (typically around 10) of Elder Signs are placed 
 on the Ancient One, sealing it away for good.
 Essentially, Elder Signs and Doom Tokens function as independent victory and loss tracks and you want to maximise the
 number of the first and minimise the number of the latter.
@@ -44,8 +45,8 @@ If either of these reach 0 the character dies and is replaced with a new one - i
 dieing also triggers a penalty in the form of a Doom Token.
 Investigators can accumulate items of various kinds throughout the game by completing Adventures,
 the majority of which are consumables that provide single-use benefits when attempting Adventures.
-Like Ancient Ones, there's a large selection of Investigators with differing health/sanity hitpoints, special abilities
-and starting items.
+Like Ancient Ones, there's a large selection of Investigators with differing amounts of health/sanity hitpoints, 
+special abilities and starting items.
 
 [Example investigator]
 
@@ -79,30 +80,54 @@ rulebook has done this for me already.
 So how does one actually attempt an Adventure?
 In a nutshell it involves repeatedly rolling a set of non-standard dice and matching symbols on the dice
 to symbols on the Adventure card.
-This involves a lot of randomness and although the game does include a few opportunities for player choice in 
-attempting an Adventure, the skill cap of these choices is low (there's an obviously correct action in most cases) 
-and their effect is quite small.
 
-As the player has relatively little control over the outcome of an Adventure once it's started the most important 
-choices are what Adventures to attempt and what consumable items to use before attempting as these grant additional
-dice to be used throughout the attempt.
-Clue items can also be used during the Adventure but do not have to be commited in advance.
-Even though player choice is limited, 
-its still crucial to understand the internals of Adventures in order to estimate success probabilities.
+Attempting an adventure consists of multiple rounds, at each round you attempt to
+match the result shown on the dice to any of the tasks (or just the current task if its an ordered Adventure).
+You finish the attempt when you've either run out of dice (failure) or completed all tasks (success).
 
-The algorithm for attempting an (un-ordered) Adventure is summarised below in Python-esque pseudocode.
+If you can't match the result of your roll to any of the tasks you have a few options.
+1. Use a Clue (a consumable item) to re-roll any number of dice and then check again for matches.
+2. "Focus" a single dice by setting it aside and not re-rolling it in the next round.
+
+After an unsuccessful round with no matches you must discard a dice of your choice from the dice pool.
+Both of these options involve some player choice, however in both cases it seems like the obvious choice is to
+re-roll only the un-matched dice/focus a matched dice. 
+If you fail a round and your result contains a "terror" symbol (looks like some tentacles) then you trigger the
+Terror effect printed on the Adventure (if any).
+   
+If you can match one or more tasks to the result of you roll you must choose one of the tasks to complete by placing 
+the matched dice on the corresponding symbols of the task.
+Dice used this way are not used in any further rounds of the Adventure and the task is considered complete.
+
+Matching the dice is not entirely trivial.
+There are three kind of dice with a slightly different set of symbols (see chart below);
+Lore, Peril and Terror results must be matched 1:1 with task symbols but Investigation results are numbered
+and can be added together for many:1 matching.
+The chart below shows the three kinds of dice and what symbols are on each one
+
+[Dice Sides chart from the rulebook]
+
+To help solidify this in your mind, here's an example of completing a task from the rulebook.
+
+[Completing a task example from the rulebook]
+
+If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseucode.
+
+<details>
+<summary>Click to expand.</summary>
+
 ```
 def attempt_adventure(tasks, dice, clues)
     while len(dice) > 0 and len(tasks) > 0:
         dice_result: List[Symbol] = dice.roll()
-        matched_tasks, matched_dice: List[bool], List[Dice] = tasks.match(dice_reseult)
-        if any(matched_tasks):
-            completed_task, used_dice = select_task_to_complete(matched_tasks, matched_dice)
+        matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
+        if len(matched_tasks) > 0:
+            completed_task, used_dice = select_task_to_complete(matched_tasks)
             dice.remove(used_dice)
             tasks.pop(completed_task)
         else:
             if clues > 0:
-                # Clues act as a partial re-roll
+                # Clues let's
                 clue_policy(dice)
                 continue
                 
@@ -115,32 +140,21 @@ def attempt_adventure(tasks, dice, clues)
             return FAILURE
 ```
 
-In words I'd describe this as follows. 
-Attempting an adventure consists of multiple rounds of dice rolling, at each round you attempt to
-match the result shown on the dice to any of the tasks (or just the current task if its an ordered Adventure).
-You finish the attempt when you've either run out of dice (failure) or completed all tasks (success).
+</details>
 
-If you can't match the result of your roll to any of the tasks you have a few options.
-1. Use a Clue (a consumable item) to re-roll any number of dice and then check again for matches.
-2. "Focus" a single dice by setting it aside and not re-rolling it in the next round.
-After an unsuccessful round with no matches you must discard a dice of your choice from the dice pool.
-Both of these options involve some player choice, however in both cases it seems like the obvious choice is to
-re-roll only the un-matched dice/focus a matched dice. 
-If you fail a round and your result contains a "terror" symbol (looks like some tentacles) then you trigger the
-Terror effect printed on the Adventure (if any).
-   
-If you can match one or more tasks to the result of you roll you must choose one of the tasks to complete by placing 
-the matched dice on the corresponding symbols of the task.
-Dice used this way are not used in any further rounds of the Adventure and the task is consider complete.
+#### Randomness in adventures
 
-Matching the dice is not entirely trivial.
-There are three kind of dice with a slightly different set of symbols (see chart below);
-Lore, Peril and Terror results must be matched 1:1 with task symbols but Investigation results are numbered
-and can be added together for many:1 matching.
+As you can see, adventuring involves a lot of randomness and although the game does include a few opportunities 
+for player choice in attempting an Adventure, 
+the skill cap of these choices is low (there's an obviously correct action in most cases) and their effect is quite small.
+As the player has relatively little control over the outcome of an Adventure once it's started the most important 
+choices are what Adventures to attempt and what consumable items to use for the attempt.
+Some items grant additional dice to be used during the attempt and these have to be used in advance of the attempt.
+Clue items can also be used during the Adventure but do not have to be commited in advance.
+Even though player choice is limited, 
+its still crucial to understand the internals of Adventures in order to estimate success probabilities.
 
-[Dice Sides chart from the rulebook]
-
-Hopefully you can see from this section why I took a Monte Carlo approach to this problem.
+Hopefully you can see why I took a Monte Carlo approach to this problem.
 Calculating the probability of succeeding a single task given a set of dice is easily achievable with a bit of 
 combinatorics but calculating the success probability of a whole Adventure is much harder.
 The focus mechanic, the option to do partial re-rolls using Clue items and the possibility of triggering Terror effects 
