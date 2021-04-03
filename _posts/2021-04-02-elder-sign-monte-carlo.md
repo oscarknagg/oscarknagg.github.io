@@ -118,31 +118,31 @@ To help solidify this in your mind, here's an example of completing a task from 
 If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseudocode.
 
 <details>
-    <summary>Adventure attempt pseudocode.</summary>
+<summary>Adventure attempt pseudocode.</summary>
 
-    ```
-    def attempt_adventure(tasks, dice, clues)
-        while len(dice) > 0 and len(tasks) > 0:
-            dice_result: List[Symbol] = dice.roll()
-            matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
-            if len(matched_tasks) > 0:
-                completed_task, used_dice = select_task_to_complete(matched_tasks)
-                dice.remove(used_dice)
-                tasks.pop(completed_task)
-            else:
-                if clues > 0:
-                    # Clues let's
-                    clue_policy(dice)
-                    continue
-                    
-                focus_policy(dice)
-                dice.pop()  # Remove one dice
+```
+def attempt_adventure(tasks, dice, clues)
+    while len(dice) > 0 and len(tasks) > 0:
+        dice_result: List[Symbol] = dice.roll()
+        matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
+        if len(matched_tasks) > 0:
+            completed_task, used_dice = select_task_to_complete(matched_tasks)
+            dice.remove(used_dice)
+            tasks.pop(completed_task)
+        else:
+            if clues > 0:
+                # Clues let's
+                clue_policy(dice)
+                continue
                 
-            if len(tasks) == 0:
-                return SUCCESS
-            else:
-                return FAILURE
-    ```
+            focus_policy(dice)
+            dice.pop()  # Remove one dice
+            
+        if len(tasks) == 0:
+            return SUCCESS
+        else:
+            return FAILURE
+```
 
 </details>
 
@@ -228,7 +228,7 @@ This is important as otherwise this analysis would always recommend spending all
 your success probability, even for already easy adventures where the marginal success probability improvement 
 might not be worth spending an item.
 
-| Object         | Value (Elder Sign Equivalents) | Comment                                                                                                      |
+| Object         | Value (Elder Signs)            | Comment                                                                                                      |
 |----------------|--------------------------------|--------------------------------------------------------------------------------------------------------------|
 | Elder Sign     | 1                              | Reference point                                                                                              |
 | Doom Token     | -1.1                           | Slightly worse than an Elder Sign is good as acquiring one sometimes triggers additional negative penalties. |
@@ -309,22 +309,63 @@ mostly Investigation symbols which can be matched in multiple ways.
 
 <center>A "cheat sheet" of card difficulties vs GDEs for a range of item scenarios.</center>
 
-### Influencing factors
+### Factors influencing Adventure difficulty
 
-- Concentration of symbols
-    - Do some "theoretical" simulations on dummy tasks
-        - SS vs S/S
-        - SSS vs SS/S vs S/S/S
-        - SSSS vs SSS/S vs SS/SS vs SS/S/S
+We've seen that the green-dice equivalent is a simple yet fairly good proxy for Adventure difficulty,
+what other factors influence difficulty and what rules can we discern?
+
+To make this section I simulated various task layouts 1 million times each in the default no-item, 6 green dice scenario 
+to determine their success probabilities.
+I've developed a shorthand for task layouts with the following rules:
+- `S` denotes a non-investigation symbol 
+- A number denotes an investigation symbol with a particular value 
+- `/` separates tasks
+
+Note that we don't need to distinguish between symbols in the default scenario as they are all equally likely on the
+green dice.
+#### More concentrated tasks are harder
+
+An Adventure has more "concentrated" tasks if more of the symbol requirements are located in a single task.
+In general, if two Adventures contain the same number of symbols, the one with the more concentrated tasks is harder.
+This rule holds for almost all printed cards with the exception that `SS/S` and `S/S/S` are about equally hard.
+Also, `S/S/S/S` is harder than `SS/S/S` but no Adventure with tasks of the form `S/S/S/S` is printed anywhere 
+(in the expansions I have).
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/symbol-concentration.png)
+
+#### Investigations are easier than other symbols but a mix is easier still
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/symbols-vs-investigations.png)
+
+
+#### Ordering makes relatively little difference
 - Investigation easier than symbols
     - Result: Linear regression on symbols + investigation count to predict success proba weights 3.25:1
     - Simulations
+        - S vs 3 vs 4 vs 5
+            - (97.8% vs 99.9% vs 99.2% vs 97.3%)
         - SS vs S3 vs 6
+            - (80.4% vs 90.2% vs 92.4%)
+        - SSS vs SS3 vs S6 vs 9
+            - (28.1% vs 50.2% vs 62.1% vs 46.0%)
+        - SSSS vs SSS3 vs SS6 vs S9 vs 12
+            - (2.9% vs 9.0% vs 16.5% vs 14.4% vs 6.3%)
 - Ordered vs unordered
     - Unordered vs ordered for some representative tasks
+        - S/S
         - SS/SS
+            - Ordered: 14.1%, Unordered: 14.1%
         - SS/S
-        - S/S/S
+            - Ordered: 48.1%, Unordered: 57.6%
+        - S/SS
+            - Ordered: 49.0%, Unordered: 57.6%
+        - SSS/S
+        - S/SSS
+            - Ordered: 8.5%, Unordered: 12.4%
+        - S/S/SS
+            - Ordered: 18.5%
+        - SS/S/S
+            - Ordered: 18.2%
 
 ### Expected returns on Adventure attempts
 
@@ -338,12 +379,13 @@ The first thing that stands out to me is that a lot of the CDF is in the positiv
 This tells me that most of the time there will be a positive expected return Adventure (if you can identify it) and
 this agrees with my anecdotal experience that the game is a little easy with ~75% of games ending in victory.
 
-The unintuitive part of this chart is that 
+The unintuitive part of this chart is that the scenarios with the most items do not always have the best expected returns
+due to the opportunity cost of spending those items.
+In fact, the scenario with arguably the best returns is spending items to get just the yellow and red dice.
+I think that I may have overestimated the opportunity costs in my value table
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/expected-return-distribution.png)
 
-- Talk about this chart
-- Give examples of high/low expected return cards
 
 S-tier
 - Great hall of Celeano: Great rewards, middling difficulty but best of all is that there is a minimal failure penalty
