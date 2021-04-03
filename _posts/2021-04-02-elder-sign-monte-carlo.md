@@ -36,7 +36,8 @@ number of the first and minimise the number of the latter.
 Each of the Ancient Ones has a special ability that impacts the game and a different number of Elder Signs/Doom Tokens
 required to win/lose - I've not attempted to include these points in my analysis.
 
-[Example ancient one]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/ancient-one-example.png)
+
 
 ## Investigators and items
 
@@ -48,7 +49,7 @@ the majority of which are consumables that provide single-use benefits when atte
 Like Ancient Ones, there's a large selection of Investigators with differing amounts of health/sanity hitpoints, 
 special abilities and starting items.
 
-[Example investigator]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/investigator-example.png)
 
 ## Adventures
 
@@ -73,7 +74,8 @@ Adventure is non-trivial.
 There's no better way to understand all of this than to look at a few examples and luckily the 
 rulebook has done this for me already.
 
-[Adventure Card Anatomy from the rulebook]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/adventure-card-anatomy.png)
+
 
 ### Attempting Adventures
 
@@ -103,19 +105,21 @@ Matching the dice is not entirely trivial.
 There are three kind of dice with a slightly different set of symbols (see chart below);
 Lore, Peril and Terror results must be matched 1:1 with task symbols but Investigation results are numbered
 and can be added together for many:1 matching.
-The chart below shows the three kinds of dice and what symbols are on each one
+The chart below shows the three kinds of dice and what symbols are on each one, 
+note that the yellow and red dice are slightly more valuable than the default green dice.  
 
-[Dice Sides chart from the rulebook]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/dice-sides.png)
 
 To help solidify this in your mind, here's an example of completing a task from the rulebook.
 
-[Completing a task example from the rulebook]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/completing-task-example.png)
 
-If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseucode.
+
+If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseudocode.
 
 <details>
 <summary>Click to expand.</summary>
-
+<p>
 ```
 def attempt_adventure(tasks, dice, clues)
     while len(dice) > 0 and len(tasks) > 0:
@@ -138,8 +142,8 @@ def attempt_adventure(tasks, dice, clues)
             return SUCCESS
         else:
             return FAILURE
-```
-
+\```
+</p>
 </details>
 
 #### Randomness in adventures
@@ -206,7 +210,23 @@ This is important as otherwise this analysis would always recommend spending all
 your success probability, even for already easy adventures where the marginal success probability improvement 
 might not be worth spending an item.
 
-[Value table]
+| Object         | Value (Elder Sign Equivalents) | Comment                                                                                                      |
+|----------------|--------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Elder Sign     | 1                              | Reference point                                                                                              |
+| Doom Token     | -1.1                           | Slightly worse than an Elder Sign is good as acquiring one sometimes triggers additional negative penalties. |
+| Trophy Point   | 1/12                           | Based on exchange rate in the base game shop                                                                 |
+| 1 Health       | 0.75*1/12                      | Based on exchange rate in the First Aid Station                                                              |
+| 1 Sanity       | 0.75*1/12                      | Based on exchange rate in the First Aid Station                                                              |
+| Common Item    | 2/12                           | Based on exchange rate in the shop                                                                           |
+| Unique Item    | 3/12                           | Based on exchange rate in the shop                                                                           |
+| Spell          | 4/12                           | Based on exchange rate in the shop                                                                           |
+| Ally           | 5/12                           | Based on exchange rate in the shop                                                                           |
+| Clue           | 1/12                           | Based on exchange rate in the shop                                                                           |
+| Blessed status | 8/12                           | Based on exchange rate in the chapel                                                                         |
+| Cursed status  | -9/12                          | Similar effect to Blessed but opposite in direction                                                          |
+| Monster        | -3/12                          | Equivalent to a ~1.5 symbol task being placed on an Adventure                                                |
+| Red Dice       | 3.3/12                         | 10% more than a Unique item                                                                                  |
+| Yellow Dice    | 2.2/12                         | 10% more than a Common item                                                                                  |
 
 This approach is reminiscent of [material values](https://en.wikipedia.org/wiki/Chess_piece_relative_value) in chess, 
 where each piece on the board is assigned a numerical value and the total value of the board is just the sum of over
