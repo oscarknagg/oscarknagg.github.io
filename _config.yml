@@ -3,7 +3,7 @@ title:              Oscar Knagg
 bio:                'Builder of novel things.'
 description:        "Oscar is a guy who spent too much time choosing a background image."
 reading_time:       true
-words_per_minute:   200
+words_per_minute:   250
 logo:               'assets/img/me.jpg'
 background:         'assets/img/background-1.jpg'
 tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
