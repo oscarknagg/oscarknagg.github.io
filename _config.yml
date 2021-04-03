@@ -13,11 +13,15 @@ url:                https://oscar.kna.gg
 
 # Jekyll
 permalink:          /:title/
-markdown:           CommonMarkGhPages
+markdown:           kramdown
 highlighter:        rouge
-commonmark:
-  options: ["SMART", "FOOTNOTES"]
-  extensions: ["strikethrough", "autolink", "tables"]
+kramdown:
+    auto_ids:         true
+    footnote_nr:      1
+    entity_output:    as_char
+    toc_levels:       1..6
+    enable_coderay:   false
+    parse_block_html: true
 mathjax:            true
 sass:
   sass_dir:         _sass

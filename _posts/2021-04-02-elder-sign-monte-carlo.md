@@ -328,6 +328,18 @@ mostly Investigation symbols which can be matched in multiple ways.
 
 ### Expected returns on Adventure attempts
 
+Now that we've got a good handle on what our chances of success are when attempting Adventures we can start to 
+draw some conclusion about which particular adventures have positive or negative expected returns in different scenarios.
+The chart below shows the CDF of the expected return in Elder Sign equivalents (ESEs) of all 98 Adventure cards for a 
+range of different item scenarios.
+The dashed lines are 1/6th and 5/6th percentiles - about where you'd expect the best and worst Adventure in a draw of 6.
+
+The first thing that stands out to me is that a lot of the CDF is in the positive expected return region, for all scenarios.
+This tells me that most of the time there will be a positive expected return Adventure (if you can identify it) and
+this agrees with my anecdotal experience that the game is a little easy with ~75% of games ending in victory.
+
+The unintuitive part of this chart is that 
+
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/expected-return-distribution.png)
 
 - Talk about this chart
