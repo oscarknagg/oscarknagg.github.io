@@ -195,6 +195,24 @@ number of processors on my machine by using the Python `multiprocessing` library
 independently. On my Ryzen 3950X (16C/32T) I was able to run 8192 attempts for each Adventure/scenario (98*11) pair in just
 over 3 minutes.
 
+The scenarios I simulated are listed below and span from a weak board position (green dice locked)
+to a very strong board position (geared + blessed).
+This is not an exhaustive range of scenarios but I'd say about 99% of board positions in a particular playthrough
+will fall in this range.
+
+| Scenario              | Green Dice | Yellow Dice | Red Dice | Clues |
+|-----------------------|------------|-------------|----------|-------|
+| Green Locked (cursed) | 5          | 0           | 0        | 0     |
+| Default               | 6          | 0           | 0        | 0     |
+| Blessed               | 7          | 0           | 0        | 0     |
+| Yellow                | 6          | 1           | 0        | 0     |
+| Red                   | 6          | 0           | 1        | 0     |
+| Yellow+Red            | 6          | 1           | 1        | 0     |
+| Clue                  | 6          | 0           | 0        | 1     |
+| Clue*3                | 6          | 0           | 0        | 3     |
+| Geared                | 6          | 1           | 1        | 1     |
+| Geared+Blessed        | 7          | 1           | 1        | 3     |
+
 ## Assigning values in Elder Sign equivalents
 
 Once I'd acquired this raw data there was a single missing step - converting the diverse rewards/penalties into a 
@@ -237,33 +255,59 @@ Similarly, this analysis is limited for Elder Sign as it doesn't account for the
 earlier you care more about items but when you're within striking distance of victory you will care more about 
 Elder Signs.
 
-# Results - adventures
-## Adventure difficulties
+# Results
+## Adventures
+### Difficulties
 
+Just how difficult are Adventure cards, what are the hardest and easiest?
+The chart below shows the cumulative distribution function (CDF) of the Adventure success probabilities
+under a range of circumstances.
+In the default, item-free, scenario adventures span from essentially impossible to almost guaranteed success.
+However, in the strongest scenario even the hardest adventure has about a 35% chance of success.
+
+The dashed lines are the 1/6th and 5/6th percentiles - where you'd expect the hardest and easiest adventure to be 
+in the initial draw of 6 Adventure cards.
+Players typically start with at least one of an extra red/yellow dice or a clue so I'd expect a board to contain
+one adventure with an 80% chance of success.
+
+From this chart we can also see the relative benefits of the yellow dice, red dice and clues and can see
+that clue < yellow < red, just as the 1/2/3 pricing in the shop would suggest.
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/success-probability-distribution.png)
 
-- Top-line is the 5/6 percentile i.e. about the best adventure in a draw of 6
-    
+### Green-dice equivalents
+
+The proxy I use for card difficulty while playing the game is the minimum number of green dice required to complete a
+task AKA green-dice-equivalents or GDEs for short.
+This is easily calculated as three times the total number of non-investigation symbols on an Adventure plus the 
+number of investigations, all divided by 3.
+A slightly better (but less simple) proxy is to treat a non-investigation symbol as 3.25 investigations as these
+are the relative weights when doing linear regression to predict card success probability based on task symbols.
+
+It turns out that GDEs are a relatively good proxy for Adventure difficulty - 
+the chart below shows the success probability in the default, no item, scenario vs the GDE value of Adventures.
+
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/min-green-dice-heuristic.png)
 
-- Minimum number of green dice to complete adventure as a heuristic
-- Interesting outliers
-    - min dice = 3
-        - something_has_broken_free, ordered + terror: immediately fail
-        - you_become_that_which_you_fear_most+ominous_portents: Triple task
-        - did_you_hear_that: Terror discard all terror
-        - prized_display+just_sign_here: S/S/S task
-    - min dice = 4
-        - it_s_quiet: 12
-        - koi_pond: Terror: immediately fail
-        -
-    
+The trend is not quite monotonic, with a Spearman's coefficient of 0.88, but it's pretty good!
+The outliers from this trend illustrate some of the other factors that influence Adventure difficulty.
+
+The three hardest Adventures with a GDE of 3 are shown below. 
+`Something Has Broken Free` (P(success) = 0.18) is an ordered adventure so you can only match dice to the topmost incomplete task and
+also has a terror effect (triggered on failing a task while your dice roll shows a terror symbol) that causes you
+to fail the adventure entirely!
+`You become that which you fear most` (P(success) = 0.28)  and `Ominous Portents` (P(success) = 0.29)  
+have no unusual effects but each have a task requiring three dice to be matched simultaneously.
+As I'll show in the next section the concentration of symbols within tasks is an important factor in card difficulty.
+
+[something_has_broken_free, you_become_that_which_you_fear_most, ominous_portents]
+
+On the flipside, the outliers on the easy side tend to have non-concentrated task symbols or are composed of 
+mostly Investigation symbols which can be matched in multiple ways.
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/cheat-sheet.png)
 
-- Success probability cheatsheet
-
+<center>A "cheat sheet" of card difficulties vs GDEs for a range of item scenarios.</center>
 
 ### Influencing factors
 
@@ -282,7 +326,7 @@ Elder Signs.
         - SS/S
         - S/S/S
 
-## Adventure tier list
+### Expected returns on Adventure attempts
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/expected-return-distribution.png)
 
@@ -314,15 +358,15 @@ Trash tier
 - It's quiet
 
 
-# Results - understanding mechanics
+## Understanding game mechanics
 
-## Dice vs clues
+### Dice vs clues
 
 - Can extract relevant information from first success probability cdf chart
 - Give a few charts of success probabilities for median card under defauly, yellow, red, clue
 - Do I think shop prices are justified
 
-## Focusing, is it a big deal?
+### Focusing, is it a big deal?
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/focus-success-probability-boost.png)
 
