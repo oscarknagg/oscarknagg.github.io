@@ -430,7 +430,7 @@ taken the average expected return over what I (anecdotally) consider to be the m
 to have over the course of a game.
 In order of increasing strength these are default (no items), clue, yellow, red, and yellow+red.
 
-![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/best-cards.pdf)
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/best-cards.png)
 
 
 #### 1. Great Hall of Celeano
@@ -469,7 +469,7 @@ Note that I've modelled this card with an unfilled monster slot so it would move
 
 Similarly, here are the worst adventures - none of these have a positive expected return with any item set!
 
-![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/worst-cards.pdf)
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/worst-cards.png)
 
 
 #### 1. Please do not touch the exhibits (worst)
