@@ -388,39 +388,107 @@ In fact, the scenario with arguably the best returns is spending items to get ju
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/expected-return-distribution.png)
 
-### Best cards
+### Best adventures
 
-Tradeoff of variance that I haven't considered, let's just mention it
+TODO: paste this table into a public Google Sheet
+Using these expected returns I've created a (num cards * num scenarios) table that in principle could be
+used to play the game.
+An interesting experiment to validate this analysis would be to play a bunch of games making decisions intuitively
+vs picking use the highest expected returns from this table and seeing which has a higher win rate.
 
-S-tier
-- Great hall of Celeano: Great rewards, middling difficulty but best of all is that there is a minimal failure penalty
-- The elder sign: similar to above
-- The dreamlands: really easy, few penalties so its basically an elder sign on a plate
+However this table is quite verbose and the most interesting parts are just the top and bottom of the distribution.
+The expected returns of Adventures vary with the items you have so to collapse the table into a single ranking I've 
+taken the average expected return over what I (anecdotally) consider to be the most common item sets you're likely 
+to have over the course of a game.
+In order of increasing strength these are default (no items), clue, yellow, red, and yellow+red.
 
-A-tier
+[Best adventure cards]
 
-- Yuggoth: Amazing rewards with middle of the road penalties. However you need to be well prepared to attempt it which keeps it out of S
-- Grazed writings: a very easy elder with few penalties. However less good peripheral rewards than the dreamlands
-- Sudden Attack: Relatively easy, good rewards
+#### 1. Great Hall of Celeano
 
+- P(success | default) = 0.44, E[return | default] = 1.10
+- P(success | yellow+red) = 0.90, E[return | yellow=red] = 2.02
 
-S-tier
-- Another time
-- Up on the roof
-- Great hall of Celeano
+The rewards on this Adventure are great: +1 Elder Sign, -1 Doom Token and a high value Spell item. 
+It's also not particularly hard,
+but the real kicker though is the fact it has basically no failure penalty so it's safe to attempt with little or no
+items.
 
-A-tier
+#### 2. Another time
 
+- P(success | default) = 0.64, E[return | default] = 1.27
+- P(success | yellow+red) = 0.97, E[return | yellow=red] = 1.78
+
+Two Elder Signs and two clues is a very strong reward for an Adventure with a 2/3rds success rate (even with no items).
+The penalties and additional costs are mostly clock turns - 
+every 4 clock turns triggers a random, usually slightly negative random effect.
+I rate the value of a clock turn as being relatively small and negative this so they don't make this Adevnture a bad choice.
+
+#### 3. Up on the roof
+
+- P(success | default) = 0.55, E[return | default] = 1.11
+- P(success | yellow+red) = 0.87, E[return | yellow=red] = 1.64
+
+The rewards for `Up on the Roof` are the same as `Great Hall of Celeano` with the addition of a monster, which is a 
+negative valued reward.
+Monsters are essentially just extra (randomised) tasks that get added to adventures, making them more difficult.
+However, they come with a trophy point reward which mitigates the negative value.
+This card is a little easier than `Great Hall of Celeanso` but that doesn't make up for the worse rewards.
+Note that I've modelled this card with an unfilled monster slot so it would move down the rankings a lot if it was filled.
 
 ### Worst cards
 
-- Please do not touch the exhibits: Doom token terror effect and penalty
-- Light's out: Incredibly difficult adventure for 1 elder sign. The fact that the penalty is a doom token and the max prob
-    of success is < 0.5 even in the best scenario means this card never works out positive in expectation
-- The hidden temple: Nasty doom tokens, unquantified gate open effect
+Similarly, here are the worst adventures - none of these have a positive expected return with any item set!
+
+[Worst adventure cards]
+
+#### 1. Please do not touch the exhibits (worst)
+
+- P(success | default) = 0.23, E[return | default] = -2.37
+- P(success | yellow+red) = 0.65, E[return | yellow=red] = -1.13
+
+Don't be tricked by the high rewards on this card - you're in for a bad time even with good items.
+The key to this cards dismal return is it's terror effect.
+In fact, with both the yellow and red additional dice (a fairly good situation) you're likely to trigger the 
+terror effect an average of 1.93 times when attempting this adventure!
+Even conditional on success you're still likely to trigger to the terror effect 0.86 times, which is about half of the
+reward.
+The fact that this card has guaranteed sanity and health costs just adds insult to injury.
+
+#### 2. The hidden temple
+
+- P(success | default) = 0.09, E[return | default] = -2.02
+- P(success | yellow+red) = 0.69, E[return | yellow=red] = -1.15
+
+This adventure has a guaranteed Doom Token on entry, while also being difficult and having a doom token penalty, you
+don't need to be a genius to see this one is a bad idea.
+To be fair I haven't attempted to quantify the value of the `Open Gate` (the planet symbol) reward which adds an extra 
+adventure to the board so I'm probably being too harsh on this one.
+If I assigned some positive value to these rewards then this card would be merely somewhat bad.
+
+#### 3. Light's Out
+
+- P(success | default) = 0.02, E[return | default] = -1.15
+- P(success | yellow+red) = 0.40, E[return | yellow=red] = -0.40
+
+This card is staggeringly hard; its in the top 5 most difficult adventures and even in the most favourable scenario 
+I simulated (all 3 additional dice and 3 clues) there's still a 1 in 3 chance of failure.
+As the rewards and penalties are fairly balanced in magnitude the sheer difficulty of this adventure makes it one to 
+avoid.
 
 # Conclusion
 
-- Limitations of the analysis
-- My thoughts on the game
-- Link to code
+After a dozen playthroughs and a thorough (but still not entirely complete) analysis you might be wondering whether I
+would change anything about this game.
+My one complaint is that since most of the items are consumables that come and go there is little character progression 
+and hence the start of the game feels very similar to the end of the game.
+It would be very cool if there were more extra hard 
+This analysis only covers the base game and the first expansion (Unseen Forces), from what I've read the later 
+expansions address this with the addition of permanent "skill" items that characters can acquire.
+
+I've shown that there are some adventures which have objectively worse payoffs 
+(given plausible values for various rewards and penalties), would I re-balance these cards to make them fairer?
+Actually no.
+For me, the fun of the game lies in debating which adventure to choose at a particular time.
+If all adventures had similar expected payoffs then there would be little point in trying to make better decisions.
+
