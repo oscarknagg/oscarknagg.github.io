@@ -117,6 +117,7 @@ To help solidify this in your mind, here's an example of completing a task from 
 
 If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseudocode.
 
+*Expand for pseudocode*
 <details>
     <summary>Adventure attempt pseudocode.</summary>
     <p>
@@ -220,15 +221,17 @@ single scalar value.
 To do this I treated acquiring an Elder Sign as having a value of 1 and rescaled all other rewards/penalties around that.
 The base game (before expansions) used to let you exchange 10 trophy points for an Elder Sign but this was removed 
 for being too easy (and also a boring mechanic as it let you grind easy, low-risk adventures only and still win).
-Hence I've set the value of a trophy point as 1/12 Elder Sign equivalents.
-Luckily, the shop lets you exchange trophy points for various items and I use the rates in the shop to fix the items.
+Hence I've set the value of a trophy point as 1/12 Elder Sign equivalents (ESEs).
+The shop lets you exchange trophy points for various items and I use the rates in the shop to fix the value of items
+against trophy points.
+
 I've also assigned a value to having a red/yellow dice that to incorporate the opportunity cost of spending an item to
 get a red/yellow dice when attempting an adventure.
 This is important as otherwise this analysis would always recommend spending all of your items on adventure to boost
 your success probability, even for already easy adventures where the marginal success probability improvement 
 might not be worth spending an item.
 
-| Object         | Value (Elder Signs)            | Comment                                                                                                      |
+| Object         | Value (ESEs)                   | Comment                                                                                                      |
 |----------------|--------------------------------|--------------------------------------------------------------------------------------------------------------|
 | Elder Sign     | 1                              | Reference point                                                                                              |
 | Doom Token     | -1.1                           | Slightly worse than an Elder Sign is good as acquiring one sometimes triggers additional negative penalties. |
@@ -390,6 +393,8 @@ In fact, the scenario with arguably the best returns is spending items to get ju
 
 ### Best cards
 
+Tradeoff of variance that I haven't considered, let's just mention it
+
 S-tier
 - Great hall of Celeano: Great rewards, middling difficulty but best of all is that there is a minimal failure penalty
 - The elder sign: similar to above
@@ -400,6 +405,14 @@ A-tier
 - Yuggoth: Amazing rewards with middle of the road penalties. However you need to be well prepared to attempt it which keeps it out of S
 - Grazed writings: a very easy elder with few penalties. However less good peripheral rewards than the dreamlands
 - Sudden Attack: Relatively easy, good rewards
+
+
+S-tier
+- Another time
+- Up on the roof
+- Great hall of Celeano
+
+A-tier
 
 
 ### Worst cards
