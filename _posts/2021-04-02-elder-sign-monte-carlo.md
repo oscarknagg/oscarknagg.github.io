@@ -190,7 +190,23 @@ Well, all I can say is that they didn't try hard enough.
 
 # Method - the Monte-Carlo virtual casino
 
-- One paragraph history of Monte Carlo method, maybe throw in a good quote or two
+The Monte Carlo method is a computational method for approximating otherwise intractable probability questions
+that was first developed at Los Alamos for the study of neutron diffusion in nuclear weapons 
+(clearly, this work is just as important).
+Instead of working out the exact distribution corresponding your answer, you just take repeated samples from it and
+then estimate the quantity of interest based on those sample.
+As being able to sample from a distribution is often much each easier than specifying its exact form this represents
+a drastic increase in the range of problems that can be tackled, especially in our age of very fast computers.
+
+he description of the Monte Carlo method might bring to mind the image of a compulsive gambler repeatedly
+pullling the lever at a slot machine. 
+In fact this is not far wrong, the namesake of this technique is the Monte Carlo casino in Monaco
+where [Stanislaw Ulam's](https://en.wikipedia.org/wiki/Stanislaw_Ulam) uncle would go after borrowing money from relatives.
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/monte-carlo-casino.png)
+
+
+<center>The fabled Monte Carlo casino itself.</center>
 
 ## Technical details
 
@@ -302,16 +318,15 @@ the chart below shows the success probability in the default, no item, scenario 
 
 The trend is not quite monotonic, with a Spearman's coefficient of 0.88, but it's pretty good!
 The outliers from this trend illustrate some of the other factors that influence Adventure difficulty.
+I've annotated the chart with the task requirements of these outliers.
 
-The three hardest Adventures with a GDE of 3 are shown below. 
+There are three adventures with a GDE of 3 that are much hard then the trend.
 `Something Has Broken Free` (P(success) = 0.18) is an ordered adventure so you can only match dice to the topmost incomplete task and
 also has a terror effect (triggered on failing a task while your dice roll shows a terror symbol) that causes you
 to fail the adventure entirely!
-`You become that which you fear most` (P(success) = 0.28)  and `Ominous Portents` (P(success) = 0.29)  
+`You become that which you fear most` and `Ominous Portents` (both P(success) = 0.29)  
 have no unusual effects but each have a task requiring three dice to be matched simultaneously.
 As I'll show in the next section the concentration of symbols within tasks is an important factor in card difficulty.
-
-[something_has_broken_free, you_become_that_which_you_fear_most, ominous_portents]
 
 On the flipside, the outliers on the easy side tend to have non-concentrated task symbols or are composed of 
 mostly Investigation symbols which can be matched in multiple ways.
@@ -415,7 +430,8 @@ taken the average expected return over what I (anecdotally) consider to be the m
 to have over the course of a game.
 In order of increasing strength these are default (no items), clue, yellow, red, and yellow+red.
 
-[Best adventure cards]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/best-cards.pdf)
+
 
 #### 1. Great Hall of Celeano
 
@@ -453,7 +469,8 @@ Note that I've modelled this card with an unfilled monster slot so it would move
 
 Similarly, here are the worst adventures - none of these have a positive expected return with any item set!
 
-[Worst adventure cards]
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/worst-cards.pdf)
+
 
 #### 1. Please do not touch the exhibits (worst)
 
