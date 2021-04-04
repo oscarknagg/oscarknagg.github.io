@@ -119,7 +119,7 @@ If you're a programmer like me then it will help to see the algorithm for attemp
 
 <details>
     <summary>Adventure attempt pseudocode.</summary>
-    
+    <p>
     ```
     def attempt_adventure(tasks, dice, clues)
         while len(dice) > 0 and len(tasks) > 0:
@@ -143,7 +143,7 @@ If you're a programmer like me then it will help to see the algorithm for attemp
             else:
                 return FAILURE
     ```
-
+    </p>
 </details>
 
 #### Randomness in adventures
@@ -321,6 +321,7 @@ I've developed a shorthand for task layouts with the following rules:
 
 Note that we don't need to distinguish between symbols in the default scenario as they are all equally likely on the
 green dice.
+
 #### More concentrated tasks are harder
 
 An Adventure has more "concentrated" tasks if more of the symbol requirements are located in a single task.
@@ -353,6 +354,22 @@ It has a bigger effect the more symbols are in the adventure and the more tasks 
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/ordering.png)
 
+### Focusing is a big deal
+
+Focusing is a mechanic that lets you "freeze" a dice after an unsuccessful task attempt so it is not re-rolled in the
+next attempt - this let's you make partial progress towards a task by choosing to keep a single useful dice result.
+It's fiendishly difficult to work out the effect of this using combinatorics.
+
+The chart belows shows the increase in pass probability due to focusing for some common item scenarios and all Adventure cards.
+The x-axis is the difficulty rank of an Adventure and the y-axis is the increase in probability for the Adventure at 
+that rank.
+The effect is quite significant, especially for scenarios where an additional red or yellow dice is available.
+It's less significant for the scenario in which a Clue item is available, presumably because the effect of a Clue
+is like a much more powerful version of focusing, as you get to freeze the result of an arbitrary number of dice 
+instead of just one.
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/focus-success-probability-boost.png)
+
 ## Expected returns on Adventure attempts
 
 Now that we've got a good handle on what our chances of success are when attempting Adventures we can start to 
@@ -368,10 +385,10 @@ this agrees with my anecdotal experience that the game is a little easy with ~75
 The unintuitive part of this chart is that the scenarios with the most items do not always have the best expected returns
 due to the opportunity cost of spending those items.
 In fact, the scenario with arguably the best returns is spending items to get just the yellow and red dice.
-I think that I may have overestimated the opportunity costs in my value table
 
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/expected-return-distribution.png)
 
+### Best cards
 
 S-tier
 - Great hall of Celeano: Great rewards, middling difficulty but best of all is that there is a minimal failure penalty
@@ -384,33 +401,13 @@ A-tier
 - Grazed writings: a very easy elder with few penalties. However less good peripheral rewards than the dreamlands
 - Sudden Attack: Relatively easy, good rewards
 
-B-tier
 
-- Forgotten knowledge:
-
-
-Trash tier
+### Worst cards
 
 - Please do not touch the exhibits: Doom token terror effect and penalty
 - Light's out: Incredibly difficult adventure for 1 elder sign. The fact that the penalty is a doom token and the max prob
     of success is < 0.5 even in the best scenario means this card never works out positive in expectation
-- Too quiet:
-- It's quiet
-
-
-## Understanding game mechanics
-
-### Dice vs clues
-
-- Can extract relevant information from first success probability cdf chart
-- Give a few charts of success probabilities for median card under defauly, yellow, red, clue
-- Do I think shop prices are justified
-
-### Focusing, is it a big deal?
-
-![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/focus-success-probability-boost.png)
-
-- Yes, see chart above
+- The hidden temple: Nasty doom tokens, unquantified gate open effect
 
 # Conclusion
 
