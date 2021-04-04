@@ -435,8 +435,8 @@ In order of increasing strength these are default (no items), clue, yellow, red,
 
 #### 1. Great Hall of Celeano
 
-- P(success | default) = 0.44, E\[return | default] = 1.10
-- P(success | yellow+red) = 0.90, E\[return | yellow=red] = 2.02
+- P(success \| default) = 0.44, E\[return \| default] = 1.10
+- P(success \| yellow+red) = 0.90, E\[return \| yellow=red] = 2.02
 
 The rewards on this Adventure are great: +1 Elder Sign, -1 Doom Token and a high value Spell item. 
 It's also not particularly hard,
@@ -445,8 +445,8 @@ items.
 
 #### 2. Another time
 
-- P(success | default) = 0.64, E\[return | default] = 1.27
-- P(success | yellow+red) = 0.97, E\[return | yellow=red] = 1.78
+- P(success \| default) = 0.64, E\[return \| default] = 1.27
+- P(success \| yellow+red) = 0.97, E\[return \| yellow=red] = 1.78
 
 Two Elder Signs and two clues is a very strong reward for an Adventure with a 2/3rds success rate (even with no items).
 The penalties and additional costs are mostly clock turns - 
@@ -455,8 +455,8 @@ I rate the value of a clock turn as being relatively small and negative this so 
 
 #### 3. Up on the roof
 
-- P(success | default) = 0.55, E\[return | default] = 1.11
-- P(success | yellow+red) = 0.87, E\[return | yellow=red] = 1.64
+- P(success \| default) = 0.55, E\[return \| default] = 1.11
+- P(success \| yellow+red) = 0.87, E\[return \| yellow=red] = 1.64
 
 The rewards for `Up on the Roof` are the same as `Great Hall of Celeano` with the addition of a monster, which is a 
 negative valued reward.
@@ -474,8 +474,8 @@ Similarly, here are the worst adventures - none of these have a positive expecte
 
 #### 1. Please do not touch the exhibits (worst)
 
-- P(success | default) = 0.23, E\[return | default] = -2.37
-- P(success | yellow+red) = 0.65, E\[return | yellow=red] = -1.13
+- P(success \| default) = 0.23, E\[return \| default] = -2.37
+- P(success \| yellow+red) = 0.65, E\[return \| yellow=red] = -1.13
 
 Don't be tricked by the high rewards on this card - you're in for a bad time even with good items.
 The key to this cards dismal return is it's terror effect.
@@ -487,8 +487,8 @@ The fact that this card has guaranteed sanity and health costs just adds insult 
 
 #### 2. The hidden temple
 
-- P(success | default) = 0.09, E\[return | default] = -2.02
-- P(success | yellow+red) = 0.69, E\[return | yellow=red] = -1.15
+- P(success \| default) = 0.09, E\[return \| default] = -2.02
+- P(success \| yellow+red) = 0.69, E\[return \| yellow=red] = -1.15
 
 This adventure has a guaranteed Doom Token on entry, while also being difficult and having a doom token penalty, you
 don't need to be a genius to see this one is a bad idea.
@@ -498,8 +498,8 @@ If I assigned some positive value to these rewards then this card would be merel
 
 #### 3. Light's Out
 
-- P(success | default) = 0.02, E\[return | default] = -1.15
-- P(success | yellow+red) = 0.40, E\[return | yellow=red] = -0.40
+- P(success \| default) = 0.02, E\[return \| default] = -1.15
+- P(success \| yellow+red) = 0.40, E\[return \| yellow=red] = -0.40
 
 This card is staggeringly hard; its in the top 5 most difficult adventures and even in the most favourable scenario 
 I simulated (all 3 additional dice and 3 clues) there's still a 1 in 3 chance of failure.
