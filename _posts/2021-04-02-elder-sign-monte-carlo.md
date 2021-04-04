@@ -2,20 +2,31 @@
 layout: post
 title: "A Monte Carlo analysis of the board game Elder Sign"
 date: 2021-04-02
-excerpt: "Sample text."
+excerpt: "Defeating Cthulu more effectively using probability theory."
 tags: [monte carlo, gaming]
 comments: false
 ---
 
-*Status: WIP*
+During the UK's seemingly interminable 2021 lockdown I've been playing a lot Elder Sign -
+a co-operative board game steeped in Lovecraftian lore.
+The aim of the game is to defeat Cthulhu or another eldritch antagonist by choosing which of a small selection of 
+adventures to attempt each turn.
+Adventures can be succeeded or failed and each result brings either rewards or penalties.
+At first glance this seems similar to the [multi-armed bandit](https://en.wikipedia.org/wiki/Multi-armed_bandit)
+problem where each adventure is equivalent to a different arm.
+Unlike the bandit problem each adventure is represented by a physical card which is face up 
+and contains information on the difficulty, rewards and penalties of the adventure.
+Also, adventures are replaced when they are completed so there is less of an [exploration/exploitation](https://web.archive.org/web/20210311160454/https://www.davidsilver.uk/wp-content/uploads/2020/03/XX.pdf) 
+tradeoff.
 
-Elder Sign is a Lovecraft-themed co-operative board game that I've been playing a lot of during the UK's
-second lockdown.
-Like any mathematically inclined person my first thought was to see if I could beat the game by calculating
-the best choice in any particular scenario.
-However, the game contains a bunch of mechanics that resist an exact analysis so I decided to take a computational
-approach instead - Monte Carlo analysis.
-Monte Carlo analysis just means rolling the (virtual) dice many times and seeing what happens, it's equivalent 
+So if all of the information about these adventures is visible wherein lies the challenge of the game?
+The problem is that it's fiendishly difficult to use the printed information to work out exactly how likely 
+you are to succeed an adventure.
+Determining whether you succeed or fail an adventure involves repeated rounds of rolling non-standard dice, many to
+one matching of dice results to symbols on the card and multiple places where player actions can affect the result 
+(and more!) which puts it outside the realm of pen and paper combinatorics for mere mortals such as myself.
+In this blog post I use the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) to quantitatively
+determine which adventures have the best/worst payoffs and break down the mechanics that determine adventure difficulty.
 
 # Elder Sign in a nutshell 
 
@@ -23,10 +34,12 @@ In order for this blog post to be interesting, you'll either need to have played
 of how it works and what are the important choices that determine whether you win or lose.
 There are three important types of object in Elder Sign; Investigators, Adventures and the Ancient One.
 
+_NB: Throughout this blog post I consider just the base game and the first expansion (Unseen Forces)._
+
 ## The Ancient One
 
 This is the big bad guy you are working together to defeat, there's a selection of these with various difficulties
-including Lovecraft favourites such as Cthulu and Azathoth as well as some newly invented ones with a similar vibe.
+including Lovecraft favourites such as Cthulhu and Azathoth as well as some newly invented ones with a similar vibe.
 A single playthrough involves only a single Ancient One and ends in defeat when the Ancient One acquires a certain number
 of Doom Tokens.
 Conversely, the game ends in a victory when a certain number (typically around 10) of Elder Signs are placed 
