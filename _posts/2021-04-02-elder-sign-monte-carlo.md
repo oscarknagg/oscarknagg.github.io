@@ -4,7 +4,7 @@ title: "A Monte Carlo analysis of the board game Elder Sign"
 date: 2021-04-02
 excerpt: "Defeating Cthulu more effectively using probability theory."
 tags: [monte carlo, gaming]
-comments: false
+comments: true
 ---
 
 During the UK's seemingly interminable 2021 lockdown I've been playing a lot Elder Sign -
@@ -462,7 +462,7 @@ The rewards for `Up on the Roof` are the same as `Great Hall of Celeano` with th
 negative valued reward.
 Monsters are essentially just extra (randomised) tasks that get added to adventures, making them more difficult.
 However, they come with a trophy point reward which mitigates the negative value.
-This card is a little easier than `Great Hall of Celeanso` but that doesn't make up for the worse rewards.
+This card is a little easier than `Great Hall of Celeano` but that doesn't make up for the worse rewards.
 Note that I've modelled this card with an unfilled monster slot so it would move down the rankings a lot if it was filled.
 
 ### Worst cards
