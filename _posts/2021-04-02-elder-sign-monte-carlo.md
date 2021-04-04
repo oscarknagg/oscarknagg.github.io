@@ -118,31 +118,31 @@ To help solidify this in your mind, here's an example of completing a task from 
 If you're a programmer like me then it will help to see the algorithm for attempting an Adventure as pseudocode.
 
 <details>
-<summary>Adventure attempt pseudocode.</summary>
-
-```
-def attempt_adventure(tasks, dice, clues)
-    while len(dice) > 0 and len(tasks) > 0:
-        dice_result: List[Symbol] = dice.roll()
-        matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
-        if len(matched_tasks) > 0:
-            completed_task, used_dice = select_task_to_complete(matched_tasks)
-            dice.remove(used_dice)
-            tasks.pop(completed_task)
-        else:
-            if clues > 0:
-                # Clues let's
-                clue_policy(dice)
-                continue
+    <summary>Adventure attempt pseudocode.</summary>
+    
+    ```
+    def attempt_adventure(tasks, dice, clues)
+        while len(dice) > 0 and len(tasks) > 0:
+            dice_result: List[Symbol] = dice.roll()
+            matched_tasks: Dict[Task, Dice] = tasks.match(dice_result)
+            if len(matched_tasks) > 0:
+                completed_task, used_dice = select_task_to_complete(matched_tasks)
+                dice.remove(used_dice)
+                tasks.pop(completed_task)
+            else:
+                if clues > 0:
+                    # Clues let's
+                    clue_policy(dice)
+                    continue
+                    
+                focus_policy(dice)
+                dice.pop()  # Remove one dice
                 
-            focus_policy(dice)
-            dice.pop()  # Remove one dice
-            
-        if len(tasks) == 0:
-            return SUCCESS
-        else:
-            return FAILURE
-```
+            if len(tasks) == 0:
+                return SUCCESS
+            else:
+                return FAILURE
+    ```
 
 </details>
 
@@ -281,8 +281,6 @@ The proxy I use for card difficulty while playing the game is the minimum number
 task AKA green-dice-equivalents or GDEs for short.
 This is easily calculated as three times the total number of non-investigation symbols on an Adventure plus the 
 number of investigations, all divided by 3.
-A slightly better (but less simple) proxy is to treat a non-investigation symbol as 3.25 investigations as these
-are the relative weights when doing linear regression to predict card success probability based on task symbols.
 
 It turns out that GDEs are a relatively good proxy for Adventure difficulty - 
 the chart below shows the success probability in the default, no item, scenario vs the GDE value of Adventures.
@@ -335,39 +333,27 @@ Also, `S/S/S/S` is harder than `SS/S/S` but no Adventure with tasks of the form 
 
 #### Investigations are easier than other symbols but a mix is easier still
 
+The following charts show the success probability of a single task (default, no-item scenario) of a particular format 
+and illustrate the effect of changing the mix between Investigations and other symbols.
+The leftmost chart says that a task with one symbol is about equivalent in difficult to an Investigation with 
+value 5.
+The second chart shows that two symbols are about equivalent to an Investigation with value 7.
+However, a mix of symbols is easier still as an `S3` task has about half the chance of failure as an `SS` task.
+The third and fourth charts show the same trend as the second and both demonstrate that one symbol is worth 
+about 3.5 Investigations.
+
 ![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/symbols-vs-investigations.png)
 
 
-#### Ordering makes relatively little difference
-- Investigation easier than symbols
-    - Result: Linear regression on symbols + investigation count to predict success proba weights 3.25:1
-    - Simulations
-        - S vs 3 vs 4 vs 5
-            - (97.8% vs 99.9% vs 99.2% vs 97.3%)
-        - SS vs S3 vs 6
-            - (80.4% vs 90.2% vs 92.4%)
-        - SSS vs SS3 vs S6 vs 9
-            - (28.1% vs 50.2% vs 62.1% vs 46.0%)
-        - SSSS vs SSS3 vs SS6 vs S9 vs 12
-            - (2.9% vs 9.0% vs 16.5% vs 14.4% vs 6.3%)
-- Ordered vs unordered
-    - Unordered vs ordered for some representative tasks
-        - S/S
-        - SS/SS
-            - Ordered: 14.1%, Unordered: 14.1%
-        - SS/S
-            - Ordered: 48.1%, Unordered: 57.6%
-        - S/SS
-            - Ordered: 49.0%, Unordered: 57.6%
-        - SSS/S
-        - S/SSS
-            - Ordered: 8.5%, Unordered: 12.4%
-        - S/S/SS
-            - Ordered: 18.5%
-        - SS/S/S
-            - Ordered: 18.2%
+#### Ordering drops your chance of success by ~25%
 
-### Expected returns on Adventure attempts
+Ordering makes less difference than I thought and drops your chance of success relative to an unordered adventure by
+between 15 and 35% depending on task layout.
+It has a bigger effect the more symbols are in the adventure and the more tasks the adventure is made of.
+
+![](https://raw.githubusercontent.com/oscarknagg/oscarknagg.github.io/master/assets/img/2021-04-02-elder-sign-monte-carlo/ordering.png)
+
+## Expected returns on Adventure attempts
 
 Now that we've got a good handle on what our chances of success are when attempting Adventures we can start to 
 draw some conclusion about which particular adventures have positive or negative expected returns in different scenarios.
