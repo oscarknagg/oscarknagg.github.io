@@ -119,8 +119,6 @@ If you're a programmer like me then it will help to see the algorithm for attemp
 
 *Expand for pseudocode*
 <details>
-    <summary>Adventure attempt pseudocode.</summary>
-    <p>
     ```
     def attempt_adventure(tasks, dice, clues)
         while len(dice) > 0 and len(tasks) > 0:
@@ -144,7 +142,6 @@ If you're a programmer like me then it will help to see the algorithm for attemp
             else:
                 return FAILURE
     ```
-    </p>
 </details>
 
 #### Randomness in adventures
