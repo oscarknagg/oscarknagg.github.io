@@ -5,7 +5,7 @@ description:        "Oscar is a guy who spent too much time choosing a backgroun
 reading_time:       true
 words_per_minute:   250
 logo:               'assets/img/me.jpg'
-background:         'assets/img/background-1.jpg'
+background:         'assets/img/background-1.png'
 tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
 locale:             en_GB
 url:                https://oscar.kna.gg
