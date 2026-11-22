@@ -44,6 +44,8 @@ TASKS = [
          rungs=[(5.05, 0.4, 0.90, 0.045, "")]),
     dict(name="Computer\nuse", cat="digital", label_at=(5.55, 0.725), size=9.5,
          rungs=[(5.55, 0.45, 0.725, 0.075, "")]),
+    dict(name="Exploit finding", cat="digital", label_at=(5.5, 0.97),
+         rungs=[(5.5, 0.5, 0.90, 0.05, "")]),
     dict(name="Small-scale pretraining research", cat="digital", label_at=(9.2, 0.725),
          rungs=[(7.3, 0.4, 0.42, 0.07, "100M"), (9.2, 0.4, 0.62, 0.07, "1B")]),
     dict(name="Digital chip design", cat="digital", label_at=(6.9, 0.99),
@@ -71,6 +73,18 @@ TASKS = [
 ]
 
 # Law tasks: first pass, shown on their own in law_preview.png until reviewed.
+# Materials tasks: first pass, shown in materials_preview.png until reviewed.
+MATERIALS_TASKS = [
+    dict(name="Materials: new compounds / computable properties", cat="physical",
+         rungs=[(4.7, 1.0, 0.40, 0.10, "ML potential"),
+                (7.8, 0.5, 0.575, 0.075, "DFT"),
+                (9.2, 0.5, 0.775, 0.075, "autonomous lab")]),
+    dict(name="Materials: processing & durability", cat="physical",
+         rungs=[(5.7, 1.0, 0.30, 0.10, "process simulation"),
+                (10.5, 0.8, 0.85, 0.05, "lab tests (months)")],
+         beyond=((12.6, 0.97), "field lifetime: years")),
+]
+
 # beyond: an arrow from the last rung to a point off to the right, for a true
 # test that can't be put on the chart.
 LAW_TASKS = [
@@ -268,6 +282,8 @@ OVERVIEW_NOTE = ("Each task is shown at its cheapest reward. \u2192 marks a ladd
 def main():
     draw(TASKS, "phase_diagram_2026",
          "Where RL can reach: reward fidelity vs reward cost, November 2026", SUBTITLE)
+    draw(MATERIALS_TASKS, "materials_preview",
+         "Materials tasks against the frontier (first pass, Nov 2026)", SUBTITLE)
     draw(LAW_TASKS, "law_preview", "Law tasks against the frontier (first pass, Nov 2026)", SUBTITLE)
 
 

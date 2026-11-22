@@ -16,7 +16,65 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
-## Running list: opportunities for the post (section 5)
+## 2026-11-22: materials science, first pass (materials_preview.png; not on the main plot)
+
+**Framing:** a frontier LLM proposes a material (and its synthesis or processing route) end to end, and is rewarded by simulation, a lab or real-world tests.
+
+| Task | Rung | Reward | Cost per reward | Cost per run | Fidelity |
+|---|---|---|---|---|---|
+| **New compounds / computable properties** (stable crystals, battery cathodes, catalysts) | a | Universal ML interatomic potential (MACE/Orb class): relax and score the structure, ~1–100 GPU-s | ~$0.001–0.1 | **~$5K–500K** | **0.30–0.50** |
+| | b | DFT check: ~100–1,000 core-hours per relaxation | ~$4–40 | **~$20–200M** | **0.50–0.65** |
+| | c | Autonomous lab: robot synthesis + automated characterisation (XRD). Precursors, hours of robot time, amortised equipment | ~$100–1,000 | **~$0.5–5B** | **0.70–0.85** |
+| **Processing & durability** (alloys, coatings, battery lifetime) | a | Process simulation (CALPHAD, phase-field, finite-element) | ~$0.01–1 | **~$50K–5M** | **0.20–0.40** |
+| | b | Accelerated lab tests (fatigue, corrosion, battery cycling), taking months | ~$1–50K | **~$5–250B** | **0.80–0.90** |
+| | → | Real field lifetime: years. Off the chart | | | |
+
+**Why these heights (structural gaps only, per principle 1):**
+- **ML potential, 0.3–0.5.** Typical errors are small (energy-above-hull error under ~30 meV/atom on Matbench Discovery, [arXiv 2604.21850](https://arxiv.org/pdf/2604.21850)). But an optimiser *searches for* structures where the potential is wrong, i.e. outside its training distribution, and finds spurious stability. That's the definition of "breaks within a run".
+- **DFT, 0.5–0.65.** Being stable in DFT is necessary but far from sufficient. It says nothing about whether the material can be *made* (GNoME predicted ~380K stable materials; reportedly only ~736 had been made independently, a figure from a blog, so check it). Standard functionals also get some properties systematically wrong (e.g. band gaps).
+- **Autonomous lab, 0.7–0.85.** It is real synthesis, but automated characterisation is the weak link. A-Lab claimed 41 novel compounds in 17 days; reanalysis (Palgrave et al.) argued most weren't new, and **Nature issued a correction in Jan 2026** walking back the novelty claims while leaving the method standing (secondary sources, so check). Misreading XRD for disordered phases is a structural limit, not just a bug.
+- **Process simulation, 0.2–0.4.** Microstructure and defects drive real performance, and simulations capture them poorly.
+- **Lab durability tests, 0.8–0.9.** These are close to the real goal, but accelerated tests are themselves proxies for years in the field.
+
+**Claude's reading:**
+1. **Materials is fidelity-limited, not cost-limited, at the cheap end.** The ML-potential rung costs about the same as SWE but sits at ~0.4. That's the opposite of chips, where the cheap rung is already high-fidelity.
+2. **The real constraint on the lab rung is throughput and latency, not dollars.** A-Lab made ~41 compounds in 17 days, so 5M experiments would take thousands of lab-years. Like forecasting, "you can parallelise dollars but not wall-clock time"; here you can only parallelise by building more labs. That's the bet of **Periodic Labs** (~$300M seed; argues autonomous labs, not compute, are the bottleneck) and Lila Sciences.
+3. **Opportunity for the domain section:** better *automated characterisation* (the A-Lab weak point) would raise the lab rung's fidelity, and cheaper, faster autonomous labs would move it left. Both are investable.
+4. **GNoME is the cautionary tale:** a huge output at the cheap rung (2.2M candidates), with value bottlenecked at the expensive one. It's "a ranked hypothesis space, not a catalogue of materials".
+
+**Sources:** [Periodic Labs funding](https://www.implicator.ai/periodic-labs-raises-300-million-to-automate-science/); [GNoME dispute overview](https://absolutedigitalpublishers.com/articles/materials-discovery-is-becoming-a-breeding-program); [uMLIP cost/accuracy](https://arxiv.org/pdf/2502.03578); [Orb speed claims](https://arxiv.org/pdf/2504.06231). Mostly secondary, so check the primary papers before citing.
+
+## 2026-11-22: exploit finding added (defence deliberately left out)
+- **Plotted:** ~$100K–1M, fidelity 0.85–0.95, in the software & computing domain.
+- **Why high:** the reward is an existence proof. A flag, a sanitizer crash or a working PoC means the bug exists, so false positives are near impossible.
+- **Gaps below 1.0:**
+  - crash ≠ exploitable, and rating severity takes judgement
+  - CTFs are designed puzzles (real targets are better and just as sound)
+  - rediscovering known bugs earns reward without adding value
+- **Signals, from memory (check):** Google Big Sleep found a real SQLite vulnerability (2024); DARPA AIxCC finals (2025); XBOW topped HackerOne's US leaderboard (2025).
+- **Asymmetry for the post (limitations or predictions):** offence yields proofs that a bug *exists* (verifiable); defence needs proof of *absence* (unverifiable beyond "this known exploit no longer works", ~0.5). On this framework RL should improve attack faster than defence. Oscar chose not to plot defence.
+
+## Post structure (Oscar, 2026-11-22; supersedes HANDOFF.md's outline)
+1. **Intro:** RL drives progress; pretraining is necessary but not sufficient. Given this, what might AI disrupt next?
+2. **Methodology:** assumptions, crediting Claude, defining and justifying the two axes.
+3. **Headline overview plot**, with some explanation. (Overview design is parked: cheapest rung vs best rung under $1B.)
+4. **Domains:** a domain-specific plot plus the opportunities in each domain.
+5. **Limitations.**
+6. **Concrete predictions** for the record.
+7. **Appendix:** justification table with references (Claude's words). Built from `cost-appendix.md` plus the fidelity reasoning in these notes.
+
+**Working domain grouping (Claude's proposal):**
+- games & maths
+- software & computing (SWE, kernels, computer use, security, pretraining research)
+- chips
+- robotics & driving
+- law
+- life sciences (drugs, proteins, surgery)
+- materials
+- finance
+- judgement (novel, strategy, policy, research direction)
+
+## Running list: opportunities for the post (domain sections)
 - **EDA licences in digital chip signoff (agreed, keep).** The expensive digital rung costs ~4–10× more in licences than in compute: ~$1.5–40M per run, against ~$0.4–4M for the compute alone. This is a disruption opportunity: cheaper or open tools of signoff quality would move the rung left. The hard part is the silicon-correlation data and foundry certification, not the code. See the chip design Q&A below.
 
 ## 2026-11-22: redefining the fidelity scale by property, not method (proposal)
