@@ -65,6 +65,10 @@ TASKS = [
                 (8.0, 0.35, 0.935, 0.04, "real")],
          forbidden=[2], arcs={0: 0.2},  # bend under the manipulation ellipse
          note=((8.45, 0.885), "real rung: exploring on\npublic roads isn't allowed")),
+    dict(name="Robotic surgery (autonomous)", cat="physical",
+         rungs=[(4.2, 0.5, 0.22, 0.08, "sim"), (8.9, 0.5, 0.55, 0.08, "ex vivo tissue"),
+                (10.2, 0.5, 0.75, 0.05, "live animal"), (12.0, 0.4, 0.95, 0.03, "patients")],
+         forbidden=[3]),
     dict(name="Writing a great novel", cat="human", label_at=(8.75, 0.215),
          rungs=[(6.7, 0.35, 0.22, 0.08, "LLM\njudge"), (9.9, 0.3, 0.48, 0.08, "human\nreaders")],
          beyond=((11.9, 0.70), "\u201cstands the test of time\u201d:\ndecades away, off the chart")),

@@ -4,6 +4,20 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
 ---
 
+## 2026-11-22: robotic surgery (the "spicy" last task; cataloguing done apart from bio)
+- **Ladder** (cost per run; fidelity):
+  - simulation (~$5–50K; 0.15–0.3)
+  - → ex vivo tissue (~$1–5B; 0.45–0.65)
+  - → live animal (~$10–50B; 0.7–0.8)
+  - → patients (~$100B+; ~0.95; **hatched: exploration not allowed**, the same marker as self-driving's real rung)
+- **Why these heights:**
+  - Simulated soft tissue deforms, tears and bleeds unrealistically.
+  - Ex vivo tissue has no blood flow, breathing or living physiology.
+  - Animals are close, but their anatomy differs from humans'.
+  - On every rung, "success" needs an expert to grade it, which adds a judging gap.
+- **State of play:** progress is via **imitation learning, not RL**. SRT-H (Johns Hopkins, [arXiv 2505.10251](https://arxiv.org/abs/2505.10251)) performed a key procedure autonomously on ex vivo tissue, trained on human demonstrations. That makes it the same story as self-driving: progress by other routes while the top rung stays off-limits.
+- **Plotted on the main plot** (physical world).
+
 ## Consequences of the chart → future predictions (Oscar's list, 2026-11-22, with Claude's comments)
 1. **Higher-fidelity reward models / judges for judgement-heavy domains like law.** Oscar's anecdote: models now seem very good at diagnosing minor illnesses, presumably from training against medical rubrics.
    - *Claude:* the sharper version is about *rubric availability*. Medical Q&A got large physician-written rubric sets (e.g. OpenAI's HealthBench, May 2025, ~5K conversations with rubrics from ~260 physicians, from memory). Diagnosis also has a checkable answer, and law drafting doesn't.
