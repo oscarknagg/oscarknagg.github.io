@@ -115,7 +115,32 @@ The post's question is *"given RL drives performance, what comes next?"* The fro
 1. **Fidelity up:** low-fidelity rewards become higher fidelity. Driven by better models (LLM judges), and also by better simulators and verification tools (e.g. AI-written DFT codes and learned functionals).
 2. **Cost down:** high-cost rewards become cheaper. Driven by better hardware and compute build-out, which in this framing includes automated labs, experimentation infrastructure and cheaper tools (e.g. EDA licences).
 3. **Budget up:** the frontier's cost edge moves right as AI companies get richer and can spend more per run.
-4. *(Claude's addition, for Oscar to judge)* **The fidelity bar comes down:** RL methods that are more robust to leaky rewards (regularisation, judge ensembles, adversarially trained judges like Master-RM) let lower-fidelity rewards be used without being exploited.
+4. ~~*(Claude's addition)* **The fidelity bar comes down.**~~ **Mostly withdrawn after discussion.**
+   - Oscar's correction: judge ensembles and adversarially trained judges (Master-RM) *raise the reward's fidelity*. That's mover 1, not a lower bar.
+   - What's left is regularisation and early stopping (KL penalties, stopping before over-optimisation). These don't change the reward; they let you get *closer to its ceiling* instead of overshooting (see below). It's a second-order effect, probably not worth its own mover.
+
+### How the skill ceiling could fit into the framework (Claude's proposal; schematic in `skill_ceiling.png`)
+1. **Definition in the post:** "fidelity is how much real skill you can buy by optimising against a reward". The "probability a top-scored output is good" stays as the operational test for placing tasks.
+2. **An explainer figure in the methodology section** (left panel of `skill_ceiling.png`): real skill vs optimisation pressure for each anchor, with a "today's model skill" line. Schematic shapes, based on Gao et al.'s over-optimisation curves.
+3. **Ladders become "ceiling stacking"** (right panel): train on the cheap rung until it saturates, then switch to the expensive rung for the last stretch. That explains why a mostly-cheap ladder is worth having even when the top rung is unaffordable at 5M rollouts (only a small fraction of training needs to happen there), and it's how RLHF-style pipelines already work.
+4. **The frontier's fidelity edge gets a meaning:** "rewards whose ceiling is above today's model skill". That edge *rises* as models improve, a counter-force to mover 1 ("fidelity up"). The 0.6 line on the plot is then a snapshot for Nov 2026.
+5. **Transfer fits naturally:** capability from other training (reasoning, search) can lift a model *above* a task's own reward ceiling (forecasting; research memos on the Vals benchmark). At that point the task's low-fidelity reward can't teach more and may even pull skill down.
+
+### Fidelity as a skill ceiling (Oscar's idea, 2026-11-22; not yet adopted)
+- **Proposed reading of the y axis:** fidelity sets the *maximum real-task skill you can reach by optimising against this reward*.
+  - **1.0:** no ceiling except what the task or environment itself imposes.
+  - **0:** optimising doesn't improve real skill at all.
+  - **In between:** real skill improves, then saturates, and with continued optimisation degrades (overfitting / Goodhart).
+- **Evidence it's the right shape:** Gao et al. 2022 (reward-model over-optimisation, from memory). True ("gold") reward rises then falls as you optimise against a proxy, and the *height of the peak* grows with proxy quality. That is literally a fidelity → ceiling curve.
+- **It lines up with the adopted anchors:**
+  - sound = no ceiling
+  - leaks at the edges = high ceiling, reached late
+  - breaks within a run = ceiling reached inside one RL run
+  - weakly correlated = low ceiling, reached fast
+  - contested = no improvement
+
+  The "probability a top-scored output is good" definition can stay as the *operational test*, with the ceiling as the *intuition* in the post.
+- **A consequence worth considering (Claude):** a ceiling is only useful if it sits *above* the model's current skill. As models improve, a fixed-fidelity reward can stop teaching anything: a judge weaker than the policy can't push it further (weak-to-strong). So the fidelity a task *needs* may *rise* over time, a moving bar in the opposite direction. This also means fidelity isn't purely a property of the reward; it partly depends on how capable the policy already is. Probably a limitations-section point.
 
 ## Post structure (Oscar, 2026-11-22; supersedes HANDOFF.md's outline)
 1. **Intro:** RL drives progress; pretraining is necessary but not sufficient. Given this, what might AI disrupt next?
