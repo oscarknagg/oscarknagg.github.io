@@ -16,6 +16,45 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: trading and the judgement tasks (discussion, nothing plotted)
+
+### Trading → a paragraph in the limitations section, not a point on the plot
+- Oscar's instinct; Claude agrees. P&L is an *exact* reward, but:
+  - **Non-stationary and adversarial:** other participants adapt, so any edge decays and the environment keeps changing.
+  - **Backtests overfit** (multiple testing).
+  - **Live P&L is very noisy:** telling a Sharpe-1 strategy from luck takes years. That's latency, like forecasting.
+- In skill-ceiling terms, **the ceiling itself moves**, so fidelity isn't a fixed property of the reward.
+- Nuance: short-horizon trading (fast feedback, many samples) fits RL better, and quant firms do use ML heavily. Long-horizon investing doesn't fit.
+- **Possible pairing:** forecasting and trading together as "the reward is exact, but slow, scarce and non-stationary". A class of task the dollar axis can't represent.
+
+### Judgement tasks (policy, business strategy, research direction; forecasting adjacent)
+**Can we train against AI superforecasters / AI judges?**
+- **The ceiling is the judge.** A policy trained against a model forecaster can at best match that forecaster (weak-to-strong problem). Aggregating judges and checking consistency help a little.
+- **Consistency checks are a cheap, partly sound signal.** Probabilities should be coherent across negations, conditionals and time. Incoherence is provably wrong, but coherence ≠ accuracy, so fidelity is low.
+- **"The past as a simulator"** (retrodiction on resolved questions) works for forecasting (Turtel et al.), but leakage limits it, and for strategy the model already knows how famous cases turned out.
+
+**Can we train against simulated businesses / societies?**
+- Examples: LLM-agent societies (e.g. Park et al. 2024, simulating ~1,000 real people's survey answers, from memory) and RL policy design in economic sims (Salesforce "AI Economist", 2020, from memory).
+- **The sim encodes its designer's (or model's) assumptions,** and an optimiser exploits its errors. For policy specifically, the *Lucas critique*: people change their behaviour in response to a new policy, which is exactly what a sim calibrated on past behaviour misses.
+- Fidelity ~0.1–0.3. Cost: LLM-agent sims with ~1,000 agents × many steps ≈ ~$10–1,000 per rollout → ~$50M–5B per run.
+
+**Real outcomes:** infeasible. Years of latency, n = 1, no counterfactual, and you can't experiment on societies (hatched / off-limits).
+
+**Exception that fits the inverse-value pattern:** the *tactical* end of business strategy (pricing, product changes, marketing) has fast A/B-testable feedback. It's high-fidelity and cheap, which is why tech companies already run bandits and RL there. *Strategic* decisions (enter a market, acquire a company) aren't testable at all.
+
+**Sketch placements (if plotted as a "judgement" domain):**
+
+| Task | Rungs (cost per run; fidelity) |
+|---|---|
+| Business strategy | LLM judge / case studies (~$1–5M; 0.1–0.25) → simulated markets (~$0.1–5B; 0.15–0.3) → real outcomes (off-limits, years, n = 1) |
+| Public policy | Fiscal microsimulation for budget cost only (~$1–50M; ~0.5) → agent-society sims for behaviour (~$0.1–5B; 0.1–0.3) → real outcomes (off-limits) |
+| Long-term research direction | Expert/LLM panels (~$0.5–5B; 0.1–0.3), citations as a proxy (cheap; Goodharts badly) → real impact (decades) |
+
+**Claude's view for the post:**
+- These are worth plotting precisely *because* they sit at the bottom: the clearest examples of tasks out of reach for direct RL.
+- They're where Oscar's transfer question matters most. If they improve, it'll be via better world models, reasoning and forecasting, not via their own rewards.
+- **Concrete prediction candidate:** AI forecasters beat the Metaculus Pros by a stated date *without* being trained on real resolutions at scale. That tests "transfer beats direct RL at the bottom of the plot".
+
 ## 2026-11-22: materials scope settled
 - **Keep only "new compounds"** (ML potential → DFT → autonomous lab). **Processing & durability is dropped** from the plot and the post; the explainer below is kept for reference only.
 - The autonomous-lab rung was widened to ~$0.5–10B to match the cost breakdown.
