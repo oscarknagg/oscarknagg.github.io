@@ -16,6 +16,24 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: what "processing & durability" means (plain-language explainer)
+- **The idea:** a material's *recipe* (which atoms) is only half the story. *How you make it* determines its microstructure: grain sizes, which crystal phases form, defects, pores, internal stresses. Microstructure largely decides the properties people pay for: strength, toughness, corrosion resistance, battery lifespan. The same steel can be soft or hard depending only on heat treatment (cooled slowly vs quenched in water).
+- **"Simulating manufacturing"** = predicting microstructure from the process steps, then properties from the microstructure. For example:
+  - which phases form as an alloy cools (thermodynamic phase diagrams, "CALPHAD")
+  - how grains grow during heat treatment ("phase-field" models)
+  - the stresses that build up in a part as it cools or is 3D-printed (finite-element models)
+
+  Every link in that chain is approximate, hence low fidelity.
+- **What's tested in the lab:** make the material by the real process, then break it slowly.
+  - Tensile tests: pull until it snaps.
+  - Fatigue: bend back and forth millions of times until it cracks (aircraft parts).
+  - Creep: hold under load at high temperature for months (jet-engine turbine blades).
+  - Corrosion: weeks in a salt-spray chamber.
+  - Battery cycle life: charge and discharge hundreds to thousands of times (an EV battery should keep most of its capacity for ~8+ years).
+  - Coatings: wear, abrasion and adhesion.
+- **Why it's slow and still a proxy:** failure accumulates over many cycles or long times. Tests are sped up with higher temperatures or faster cycling, but that can change *how* things fail, so even the lab rung is a stand-in for years in the field.
+- **Possible simplification for the post:** rename the task "Making materials last" (battery lifetime, metal fatigue) with the ladder *simulation → accelerated lab tests → real-world lifetime*.
+
 ## 2026-11-22: materials Q&A (cost breakdown, workflow, better DFT)
 
 ### Cost breakdown for "new compounds"
@@ -91,6 +109,13 @@ Discovery to market is typically 10–20 years (from memory). Steps 3, 4–6 and
   - rediscovering known bugs earns reward without adding value
 - **Signals, from memory (check):** Google Big Sleep found a real SQLite vulnerability (2024); DARPA AIxCC finals (2025); XBOW topped HackerOne's US leaderboard (2025).
 - **Asymmetry for the post (limitations or predictions):** offence yields proofs that a bug *exists* (verifiable); defence needs proof of *absence* (unverifiable beyond "this known exploit no longer works", ~0.5). On this framework RL should improve attack faster than defence. Oscar chose not to plot defence.
+
+## Framing: how the frontier moves (Oscar, 2026-11-22)
+The post's question is *"given RL drives performance, what comes next?"* The frontier moves in these ways:
+1. **Fidelity up:** low-fidelity rewards become higher fidelity. Driven by better models (LLM judges), and also by better simulators and verification tools (e.g. AI-written DFT codes and learned functionals).
+2. **Cost down:** high-cost rewards become cheaper. Driven by better hardware and compute build-out, which in this framing includes automated labs, experimentation infrastructure and cheaper tools (e.g. EDA licences).
+3. **Budget up:** the frontier's cost edge moves right as AI companies get richer and can spend more per run.
+4. *(Claude's addition, for Oscar to judge)* **The fidelity bar comes down:** RL methods that are more robust to leaky rewards (regularisation, judge ensembles, adversarially trained judges like Master-RM) let lower-fidelity rewards be used without being exploited.
 
 ## Post structure (Oscar, 2026-11-22; supersedes HANDOFF.md's outline)
 1. **Intro:** RL drives progress; pretraining is necessary but not sufficient. Given this, what might AI disrupt next?
