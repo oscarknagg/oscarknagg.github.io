@@ -14,7 +14,7 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
   - *Extend kernel optimisation down:* **dropped.** The Sakana case was a harness bug (reusing results, skipping accuracy checks), which principle 1 excludes.
   - *Tilt ellipses:* **dropped** for simplicity (principle 2). The idea that "within a task you can buy fidelity" can still go in the text.
   - *Split computer use into scripted and LLM-judged rungs:* **not done.** It may be worth revisiting if more computer-use-like tasks are added.
-  - *Open:* computer use's height was partly justified by OSWorld evaluator bugs, which principle 1 now excludes. The structural reasons remain: end-state checks don't see side effects, and some tasks need an LLM judge. Consider nudging it up slightly (e.g. 0.65–0.80).
+  - *Open:* computer use's height was partly justified by OSWorld evaluator bugs, which principle 1 now excludes. The structural reasons remain: end-state checks don't see side effects, and some tasks need an LLM judge. **Done: nudged up to 0.65–0.80.**
   - The reward-hacking examples still illustrate "optimisation pressure" well in the text, as long as they're framed as harness bugs rather than fidelity limits.
 
 ---
