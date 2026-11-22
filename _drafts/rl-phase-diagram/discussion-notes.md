@@ -8,6 +8,21 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
 2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
 
+## 2026-11-22: shortlist of unplotted tasks near the frontier (first pass, not yet discussed)
+The frontier runs at roughly fidelity > 0.6 and cost < ~$1.5M per run. Per-reward cost is ×5M to get the cost per run (so $0.01 per reward → $50K per run). All numbers are rough.
+
+| Task | Reward source | Cost per run | Fidelity | Where it lands | The interesting question |
+|---|---|---|---|---|---|
+| Math/science with checkable answers | Match the final answer (string or SymPy; sometimes an LLM checks equivalence) | ~$50–500 | 0.70–0.85 | Well inside | This is the R1 domain itself, so arguably the plot's anchor. Fidelity < 1 because a right answer can come with wrong reasoning, and multiple choice can be guessed. |
+| Law: document review / diligence | Compare against human labels (relevant, privileged, risky clause) | ~$500–50K | 0.75–0.85 | Inside | The labels are human judgements with inter-annotator disagreement. Harvey is RL-training on legal tasks. |
+| Law: drafting agreements | LLM judge checks against a firm's playbook → partner review | ~$500K → ~$5–15B | 0.6 → 0.65 | On the corner → far right | The true test (does the contract hold up in a dispute years later) can't be observed. |
+| Digital chip design (RTL) *(new)* | Testbench simulation + formal equivalence → synthesis/place-and-route for power, performance and area | ~$5K–50K → ~$0.5–25M | ~0.9 (functional) / ~0.7 (PPA) | Inside → straddles | Commercial EDA licences may dominate the cost (rough, check). Open-source tools (Yosys, OpenROAD) are cheaper but lower fidelity. |
+| Analog/RF circuits | SPICE + manufacturing-variation sweeps → post-layout/EM sim → silicon | ~$50K–5M → … → ~$50–500B | 0.75–0.9 → 0.95 | Straddles the cost edge, high fidelity | **Near the frontier but hasn't fallen.** The handoff says the bottleneck is data access (proprietary designs, NDA'd process design kits, closed tools), not verification. A clear case of a gap in the method. |
+| Materials: computable properties | ML interatomic potential (~1 GPU-s) → DFT (~100–1000 core-hours) → automated lab | ~$5K → ~$20–200M → … | ~0.5 → ~0.7 → 0.75 | Cheap rung near the frontier, then right | The optimiser finds structures where the ML potential is wrong. This is a *structural* reward hack (out-of-distribution), not a bug, so it counts against fidelity. |
+| Cybersecurity CTF / exploit finding *(new)* | Capture the flag, or a sanitizer-detected crash | ~$100K–1M (VM per episode, like computer use) | ~0.85 for the task itself | Inside, near the cost edge | The check is sound for the CTF itself, but CTF challenges are an imperfect stand-in for finding real vulnerabilities. |
+
+---
+
 ## 2026-11-22: SWE extended, earlier proposals revisited
 - **Software eng. now spans 0.65–0.90 fidelity.** The top end covers SWE tasks with an *oracle*: reverse-engineering an existing program (match its behaviour), or visual feedback where a target image or reference render is the check. Oscar suspects many of Fable's one-shot JavaScript painting results come from this kind of training.
 - **Proposals from the section below, revisited under the principles above:**
