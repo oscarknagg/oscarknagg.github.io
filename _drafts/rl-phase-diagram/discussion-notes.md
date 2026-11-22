@@ -4,6 +4,32 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
 ---
 
+## 2026-11-22 (later): plot changes and locomotion references
+
+### Plot changes made
+- **Locomotion (sim)** moved from ~$160 to ~$16 ($5–50), following the napkin maths.
+- **Self-driving** is now a three-rung ladder:
+  - object-level sim (~$30, fidelity ~0.18: tests planning only, assumes perfect perception, other cars replay logs rather than react)
+  - sensor-level sim (~$5M, ~0.6)
+  - real (~$100M, ~0.94), drawn **hatched**, with a legend entry "Reward exists, but RL exploration isn't allowed". Surgery (patients) and drugs (Phase 3) should use the same style when added.
+- The object-sim arrow is curved so it doesn't cross the manipulation ellipse. The object-sim fidelity value is a guess; please challenge it.
+
+### References: RL-trained locomotion controllers in practice (recent first)
+Industry, where methods are partly public through blogs:
+- **Boston Dynamics Atlas.** The company describes training whole-body skills with RL in simulation and says that for almost all skills the policy "worked first try" on the robot ([football post](https://bostondynamics.com/blog/can-football-teach-a-robot-to-move/)). It also used RL in sim for a fridge-lifting task ([hard-work post](https://bostondynamics.com/blog/training-a-humanoid-robot-for-hard-work/)), and in Feb 2025 started a [partnership with the RAI Institute](https://bostondynamics.com/news/boston-dynamics-and-the-robotics-ai-institute-partner/) on a shared RL pipeline for electric Atlas. Note: their separate "Large Behavior Model" for manipulation is a diffusion policy trained by imitation, not RL ([post](https://bostondynamics.com/blog/large-behavior-models-atlas-find-new-footing/)).
+- **Figure.** [Natural Humanoid Walk Using Reinforcement Learning](https://figure.ai/news/reinforcement-learning-walking) (2025): an end-to-end RL walking policy for Figure 02, trained in a GPU sim with domain randomisation and transferred zero-shot. The demo shows ten robots running the same network.
+- **Spot (RAI Institute + Boston Dynamics).** [High-Performance RL on Spot](https://arxiv.org/abs/2504.17857) (2025): an RL policy reaching >5.2 m/s, about 3× the stock controller. The [NVIDIA write-up](https://developer.nvidia.com/blog/closing-the-sim-to-real-gap-training-spot-quadruped-locomotion-with-nvidia-isaac-lab/) describes zero-shot sim-to-real. Nuance: Boston Dynamics describes RL as layered on top of its model-predictive controller rather than replacing it.
+
+Academic:
+- [Learning Sim-to-Real Humanoid Locomotion in 15 Minutes](https://arxiv.org/abs/2512.01996) (Dec 2025). This is the humanoid sequel to the "walk in minutes" ANYmal result. Only the title is confirmed; check the details.
+- [ASAP](https://arxiv.org/abs/2502.01143) (2025): agile humanoid whole-body skills on Unitree G1, using sim-to-real with a learned correction for the physics mismatch.
+- Surveys: [Ha et al., Learning-based legged locomotion](https://arxiv.org/abs/2406.01152) (2024, quadruped focus) and [Bao et al., DRL for bipedal locomotion](https://arxiv.org/abs/2404.17070) (latest revision Nov 2025). The bipedal survey dates the first end-to-end sim-to-real framework on a bipedal robot to Cassie in 2019.
+- Older anchors (from memory): Rudin et al. 2021 (ANYmal in ~20 min); Radosavovic et al. 2024, *Science Robotics* ([PDF](https://hybrid-robotics.berkeley.edu/publications/ScienceRobotics2024_Learning_Humanoid_Locomotion.pdf)).
+
+**Takeaway for the post:** "RL in sim, then zero-shot transfer" is now the standard way to build locomotion controllers. Four public examples show it: Boston Dynamics, Figure, Unitree-based research, and RAI. You're right that most companies' full methods aren't public, but these blog posts are enough to support the claim. One nuance worth a sentence: at Boston Dynamics RL sits *alongside* classical control, and manipulation is moving to imitation-trained models instead. That fits the plot nicely, with locomotion inside the frontier and manipulation outside it.
+
+---
+
 ## 2026-11-22: first critique of the Nov 2026 plot
 
 ### Decisions
@@ -36,7 +62,7 @@ Because the plot asks "is this task cheaply and safely *RL-trainable* from its r
 
 What this means for the plot and the post:
 1. **This is the transfer/other-routes caveat again.** The plot measures *direct RL trainability*. Capability can also arrive by imitation, by transfer from RL'd reasoning (as with forecasting), or by brute engineering. Self-driving is a vivid example: a solved task sitting outside the RL frontier. That arguably makes the framework more honest, not weaker.
-2. **Possible plot changes (not done yet):** mark forbidden rungs differently (e.g. a hatched or greyed ellipse with "exploration not allowed"). The same treatment would later apply to surgery (patients) and drugs (Phase 3). The sim rung also needs splitting or widening: object-level sims (~$30, low fidelity for perception) vs sensor-level sims (~$5M, higher fidelity).
+2. **Possible plot changes (done later the same day, see above):** mark forbidden rungs differently (e.g. a hatched or greyed ellipse with "exploration not allowed"). The same treatment would later apply to surgery (patients) and drugs (Phase 3). The sim rung also needs splitting or widening: object-level sims (~$30, low fidelity for perception) vs sensor-level sims (~$5M, higher fidelity).
 
 ### Open points from Claude's first critique (not yet discussed)
 1. **Is fidelity measured against the sim or the real goal?** The plot implicitly uses the real goal, so sim rungs absorb the sim-to-real gap. That explains locomotion (0.82) vs manipulation (0.42). The axis label should probably say so.

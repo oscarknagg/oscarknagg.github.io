@@ -11,7 +11,7 @@ Every number below is a rough judgement call. Edit TASKS and re-run:
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.patches import Ellipse, Polygon
+from matplotlib.patches import Ellipse, Polygon, Patch
 from matplotlib.lines import Line2D
 import numpy as np
 
@@ -29,6 +29,8 @@ CATS = {
 # ---- tasks -----------------------------------------------------------------
 # Each rung: (x_centre, x_halfwidth, y_centre, y_halfwidth, rung_label)
 # x is log10(USD per run). Ladders are drawn as rungs joined by a dashed line.
+# forbidden: indices of rungs whose reward exists but where RL exploration
+# isn't allowed (public roads, patients). Drawn hatched.
 TASKS = [
     dict(name="Chess / Go", cat="digital", label_at=(0.0, 1.035),
          rungs=[(0.0, 0.5, 0.985, 0.015, "")]),
@@ -42,13 +44,16 @@ TASKS = [
          rungs=[(5.55, 0.45, 0.68, 0.08, "")]),
     dict(name="Small-scale pretraining research", cat="digital", label_at=(9.2, 0.725),
          rungs=[(7.3, 0.4, 0.42, 0.07, "100M"), (9.2, 0.4, 0.62, 0.07, "1B")]),
-    dict(name="Locomotion (sim)", cat="physical", label_at=(2.2, 0.725),
-         rungs=[(2.2, 0.5, 0.82, 0.06, "")]),
+    dict(name="Locomotion (sim)", cat="physical", label_at=(1.2, 0.725),
+         rungs=[(1.2, 0.5, 0.82, 0.06, "")]),
     dict(name="Robotic\nmanipulation", cat="physical", label_at=(2.7, 0.45),
          rungs=[(2.7, 1.0, 0.42, 0.13, "sim"), (7.2, 0.5, 0.90, 0.05, "real")],
          rung_label_offset=-0.06),
     dict(name="Self-driving", cat="physical", label_at=(8.45, 0.935), ha="left",
-         rungs=[(6.6, 0.45, 0.60, 0.10, "sim"), (8.0, 0.35, 0.935, 0.04, "real")]),
+         rungs=[(1.5, 0.45, 0.18, 0.07, "object\nsim"), (6.7, 0.45, 0.60, 0.10, "sensor\nsim"),
+                (8.0, 0.35, 0.935, 0.04, "real")],
+         forbidden=[2], arcs={0: 0.2},  # bend under the manipulation ellipse
+         note=((8.45, 0.885), "real rung: exploring on\npublic roads isn't allowed")),
     dict(name="Writing a great novel", cat="human", label_at=(8.75, 0.215),
          rungs=[(6.7, 0.35, 0.22, 0.08, "LLM\njudge"), (9.9, 0.3, 0.48, 0.08, "human\nreaders")]),
     dict(name="Drug efficacy\n(Phase 3 trials)", cat="human", label_at=(14.6, 0.845),
@@ -92,23 +97,32 @@ def main():
     for t in TASKS:
         _, color = CATS[t["cat"]]
         rungs = t["rungs"]
-        for r0, r1 in zip(rungs, rungs[1:]):
+        for k, (r0, r1) in enumerate(zip(rungs, rungs[1:])):
             c0, c1 = np.array([r0[0], r0[2]]), np.array([r1[0], r1[2]])
             d = c1 - c0
             p0 = edge_point(c0, d, r0[1], r0[3])
             p1 = edge_point(c1, -d, r1[1], r1[3])
             ax.annotate("", xy=p1, xytext=p0, zorder=2,
                         arrowprops=dict(arrowstyle="->", color=color, lw=1.5,
-                                        linestyle=(0, (4, 3)), shrinkA=0, shrinkB=2))
-        for (x, xw, y, yw, rl) in rungs:
-            ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor=color, alpha=0.20,
-                                 edgecolor="none", zorder=3))
-            ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor="none",
-                                 edgecolor=color, lw=1.8, zorder=4,
-                                 ls=(0, (3, 2)) if t.get("dashed") else "-"))
+                                        linestyle=(0, (4, 3)), shrinkA=0, shrinkB=2,
+                                        connectionstyle=f"arc3,rad={t.get('arcs', {}).get(k, 0)}"))
+        for i, (x, xw, y, yw, rl) in enumerate(rungs):
+            if i in t.get("forbidden", ()):
+                ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor=SURFACE, hatch="////",
+                                     edgecolor=color, lw=0, alpha=0.55, zorder=3))
+                ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor="none",
+                                     edgecolor=color, lw=1.8, zorder=4, ls=(0, (3, 2))))
+            else:
+                ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor=color, alpha=0.20,
+                                     edgecolor="none", zorder=3))
+                ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor="none",
+                                     edgecolor=color, lw=1.8, zorder=4))
             if rl:
                 off = t.get("rung_label_offset", 0) if (x, y) == (rungs[0][0], rungs[0][2]) else 0
                 ax.text(x, y + off, rl, fontsize=8, color=INK2, ha="center", va="center", zorder=5)
+        if "note" in t:
+            (nx, ny), ntext = t["note"]
+            ax.text(nx, ny, ntext, fontsize=7.5, color=INK2, ha="left", va="top", zorder=6)
         lx, ly = t["label_at"]
         ax.text(lx, ly, t["name"], fontsize=t.get("size", 10.5), color=INK,
                 ha=t.get("ha", "center"), va="center", zorder=6, fontweight="bold")
@@ -148,6 +162,8 @@ def main():
 
     handles = [Line2D([0], [0], marker="o", ls="", markersize=10, markerfacecolor=c,
                       markeredgecolor=c, alpha=0.8, label=n) for n, c in CATS.values()]
+    handles.append(Patch(facecolor=SURFACE, edgecolor=MUTED, hatch="////", ls=(0, (3, 2)),
+                         label="Reward exists, but RL exploration isn't allowed"))
     leg = ax.legend(handles=handles, loc="lower right", frameon=False, fontsize=9,
                     labelcolor=INK2, bbox_to_anchor=(1.0, 0.12))
 
