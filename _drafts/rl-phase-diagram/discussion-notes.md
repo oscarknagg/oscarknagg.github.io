@@ -8,6 +8,50 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
 2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
 
+## 2026-11-22: chip design Q&A (signoff, analog uses, EDA licences)
+
+### What "signoff" means
+The final battery of checks a design must pass before it's sent to the foundry ("tape-out"). Each is run with a specific, foundry-approved tool:
+- **Static timing analysis:** does every signal path meet the clock across all process/voltage/temperature corners? (Synopsys PrimeTime, Cadence Tempus)
+- **Parasitic extraction:** compute the resistance and capacitance of the actual wires, which feed timing and power. (StarRC, Quantus)
+- **Power, IR-drop and electromigration analysis:** does the power grid deliver enough current without voltage sag, and without wires wearing out over years? (Ansys RedHawk, now Synopsys; Cadence Voltus)
+- **Physical verification:** DRC (does the layout obey the foundry's thousands of geometric rules?) and LVS (does the layout match the circuit netlist?). (Siemens Calibre, the de facto standard)
+- **Formal equivalence:** is the final gate-level netlist logically identical to the RTL? (Synopsys Formality, Cadence Conformal)
+
+The tools are "signoff-quality" because their numbers have been **correlated against real silicon over many tape-outs** and **certified by the foundry for that process node**. Foundries specify which tools customers must use for tape-out (SemiAnalysis).
+
+### Digital vs analog: what each is for
+- **Digital:** anything that computes on 0s and 1s, e.g. CPUs, GPUs and AI accelerators, plus the controllers, network switches and logic inside most chips.
+- **Analog/mixed-signal:** anywhere a chip meets the continuous physical world, or has to move signals very fast:
+  - power management (voltage regulators, PMICs, battery chargers)
+  - data converters (ADCs/DACs for sensors, audio, cameras, radios)
+  - RF transceivers (Wi-Fi, 5G, Bluetooth, radar)
+  - clocking (PLLs)
+  - **high-speed I/O / SerDes:** PCIe, Ethernet, NVLink-style links, HBM interfaces
+  - sensors and their interfaces
+- **Even an AI accelerator is part-analog.** Its SerDes, memory PHYs, PLLs and voltage regulation are analog blocks, often bought as IP. The interconnect bottleneck in AI clusters is partly an analog-design bottleneck.
+- Analog is a small fraction of the area but takes long design cycles, is largely done by hand by scarce experts, and is much less automated than digital.
+
+### The licence cost cliff: references
+- AWS: EDA licence cost in silicon organisations is "often 5–10× IT infrastructure cost" ([AWS, cut time to results](https://aws.amazon.com/blogs/industries/cut-time-to-results/)). A second AWS post says licences usually cost a few times the compute, **4× in Intel's case** ([AWS, economics of EDA](https://aws.amazon.com/blogs/industries/economics-of-eda-on-aws-license-cost-optimization)). Synopsys and HPE also say licence cost "typically outweighs" compute ([Synopsys blog](https://www.synopsys.com/blogs/chip-design/3x-verification-performance-hpe-greenlake-flex-synopsys-flexeda.html)). **Caveats:** these are cloud vendors with a stake in the argument, and the quotes come from search snippets because the AWS page bodies didn't load for Claude. Oscar should open and confirm the quotes before citing.
+- SemiAnalysis [EDA market primer](https://newsletter.semianalysis.com/p/eda-market-primer) (May 2026):
+  - Pricing is "opaque by design" and vendors don't publish price lists.
+  - Fabless designers spend "$80–150K per engineer annually on tools, IP, and verification".
+  - The market is ~$18B (2025); the big three hold >85% (Synopsys ~$8B including Ansys, Cadence ~$5.3B, Siemens EDA ~$2.2–2.5B).
+  - Licensing is by seats, tokens, enterprise licence agreements, and increasingly cloud metering per compute-hour.
+  - Switching is hard: change your synthesis tool and you must re-run place-and-route, signoff and physical verification.
+
+### The disruption angle (Claude's reading, for Oscar to judge)
+- The argument for disruption: the software is expensive to license, not to run, and software is getting cheap to write. Open-source flows already exist (OpenROAD, Yosys, Magic/KLayout, ngspice), and OpenAI is training "GPT-Synopsys".
+- The argument against, which ties straight back to the plot: **what a signoff tool sells is reward fidelity.** Its value is that its timing, power and DRC numbers match real silicon at a given node, and that the foundry certifies this. That correlation is earned through many tape-outs and needs the foundry's confidential process data (PDKs and rule decks). Cheap code doesn't recreate it. It's the same structural point as sim-to-real: writing a physics engine is easy; calibrating it against reality is the hard part.
+- So the realistic disruption may be:
+  - **(a) the cheap rung gets good enough to do most of the search**, with signoff only at the end. That's the plot's ladder: train on the cheap rung, certify on the expensive one. It's already what OpenAI describes.
+  - **(b) Someone with foundry access** (a foundry itself, or a hyperscaler designing its own chips) builds certified tools.
+  - **(c) EDA vendors** (Synopsys + OpenAI) capture the value themselves.
+- Possible line for the "opportunities" section: *the expensive rung in chip design is not a lab or a fleet but a software licence, which might be the cheapest rung in the whole plot to disrupt, if the silicon-correlation data can be got at.*
+
+---
+
 ## 2026-11-22: chip design, first-pass ellipses (not yet plotted)
 
 **Framing (Oscar):** the case of interest is *end-to-end task completion by a frontier LLM*, the most bitter-lessoned version: spec in → block out, with the LLM driving the EDA tools and iterating on their feedback. Narrow optimisers like AlphaChip (RL for macro placement, used on TPUs) are background, not the plotted task.
@@ -28,7 +72,7 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 | Rung | Reward | Cost per reward | Cost per run (×5M) | Fidelity | Lands |
 |---|---|---|---|---|---|
 | Digital 1: functional + open-source synth | Simulation/equivalence against a reference, plus Yosys area/fmax estimate. Minutes of CPU. | ~$0.001–0.1 | **~$3K–300K** (centre ~$30K) | **0.70–0.85** | Inside the frontier |
-| Digital 2: signoff flow | Commercial synthesis + place-and-route + static timing/power analysis. ~2–20 CPU-hours per block; **licences cost ~3–10× the compute**. | ~$0.3–8 | **~$1.5M–40M** (centre ~$8M) | **0.85–0.95** | Just right of the frontier, near "real robot" |
+| Digital 2: signoff flow | Commercial synthesis + place-and-route + static timing/power analysis. ~2–20 CPU-hours per block; **licences cost ~4–10× the compute**. | ~$0.3–8 | **~$1.5M–40M** (centre ~$8M) | **0.85–0.95** | Just right of the frontier, near "real robot" |
 | Analog 1: SPICE with corners + Monte Carlo | 100s–10,000s of sims per design, plus a simulator licence | ~$10⁻⁴–1 | **~$500–5M** (centre ~$50K) | **0.50–0.75** | On the fidelity edge of the frontier |
 | Analog 2: post-layout extraction + EM | Needs a layout (automated analog layout is immature); hours of CPU plus licences | ~$0.2–10 | **~$1M–50M** | **0.85–0.92** | Right of the frontier |
 | Analog 3: silicon (MPW shuttle) | ~$5K–100K per design at mature nodes; months of latency | ~$5K–100K | **~$25B–500B** | **~0.95** | Far right |
@@ -45,7 +89,7 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 2. **The step to signoff is a cost cliff driven by licences, not compute.** This is a good "opportunities" item: cheaper or open signoff-quality tools (or vendor partnerships, like GPT-Synopsys) would move the expensive rung left. It's also a case where the cost axis depends on *who* is training: an EDA vendor pays no licence fees.
 3. **Analog sits at the frontier's fidelity edge**, and the handoff's point still holds: the bigger bottleneck is access (foundry PDKs under NDA, proprietary designs, closed simulators), which the plot doesn't show.
 
-**To check:** EDA licence economics (AWS and SemiAnalysis sources say licences are 3–10× compute; no public per-seat prices); Yosys runtimes for block-level designs; MPW shuttle prices; the Wilson Research first-silicon figure.
+**To check:** EDA licence economics (now referenced in the Q&A section above); Yosys runtimes for block-level designs; MPW shuttle prices; the Wilson Research first-silicon figure.
 
 ---
 
