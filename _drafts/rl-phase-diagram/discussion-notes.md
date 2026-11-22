@@ -16,6 +16,28 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: evidence on the fidelity of simulated societies and economies
+Oscar's prior: **0–0.2** for simulated business/society strategy. What does research say?
+
+| Datapoint | What it shows | Bearing on fidelity |
+|---|---|---|
+| **Hewitt, Ashokkumar, Ghezae & Willer** ([Stanford](https://www.gsb.stanford.edu/faculty-research/publications/large-language-models-can-predict-results-social-science-experiments); reportedly published in *Nature*) | GPT-4-simulated respondents predicted the treatment effects of 70 preregistered US survey experiments at **r = 0.85** (r = 0.90 on unpublished studies), matching or beating human forecasters. Lower, but comparable to experts, on 15 megastudies (606 effects). **Predicted effect sizes were systematically too large.** | The best case for sims, but it measures *correlation at evaluation time* on small attitude interventions. Systematic overestimation is exactly what an optimiser exploits: it will pick the interventions the sim thinks are huge. |
+| **Bisbee et al. 2024, "Synthetic Replacements for Human Survey Data? The Perils of LLMs"** ([Political Analysis](https://www.cambridge.org/core/product/B92267DC26195C7F36E63EA04A47D2FE)) | ChatGPT personas matched ANES averages at the coarsest level but **failed to reproduce variance and the correlates of opinion**. Regressions on synthetic data "frequently lead to different conclusions". | Sims get the mean, not the structure. Policy effects live in the structure (who responds, and how). |
+| **LLM macro forecasting** (e.g. ChatGPT inflation forecasts; [AEA 2027 session](https://www.aeaweb.org/conference/2027/preliminary/1349)) | Looks comparable to benchmarks *pseudo* out-of-sample, but **true out-of-sample forecasts were "largely inaccurate and stale"**. Leakage explained the good in-sample results. | Leakage inflates apparent fidelity. Real economic prediction is weak. |
+| **Simulated consumer expectations** ([arXiv 2505.17648](https://arxiv.org/pdf/2505.17648v3)) | LLM agents pre-registered predictions of the 2025 Michigan Survey of Consumers; simulated expectations were **more homogeneous than humans'**. | Same failure as Bisbee: too little heterogeneity. |
+| **Salesforce AI Economist** ([Science Advances 2022](https://pmc.ncbi.nlm.nih.gov/articles/PMC9067926)) | An RL-designed tax policy beat baselines, including the Saez framework, by **16%** on the equality-productivity trade-off *in simulation*. Tested on MTurk participants playing the same economic game, it was **only about on par with Saez** on that trade-off (with somewhat higher welfare). | The closest thing to a direct measurement of fidelity *under optimisation*: most of the sim-optimised advantage **vanished on real people, even in a toy game**. A real economy would be far harder. |
+
+**Reading (Claude):**
+1. Nobody has measured "fidelity under optimisation" for business or society sims directly. The AI Economist's MTurk test is the nearest proxy, and it shows the gain mostly evaporating.
+2. Where sims *do* well (Hewitt), it's correlation on typical, small interventions, not robustness when an optimiser hunts for extreme ones, and the known bias (overestimated effects) points the wrong way for RL.
+3. For economies and firms there is essentially **no out-of-sample validation**, and leakage makes the in-sample results look better than they are.
+4. **Conclusion: Oscar's 0–0.2 is well supported** for simulated business/society *strategy*. A narrow exception might be "which message or intervention shifts survey attitudes", maybe 0.2–0.4, but that's a small slice of policy.
+
+**Revised sketch placements:**
+- business strategy, simulated markets: **0–0.2**
+- public policy, agent-society sims: **0–0.2**
+- fiscal microsimulation (budget cost only): stays ~0.5
+
 ## 2026-11-22: trading and the judgement tasks (discussion, nothing plotted)
 
 ### Trading → a paragraph in the limitations section, not a point on the plot
