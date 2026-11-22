@@ -7,9 +7,65 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 ## Standing principles for placing tasks (agreed 2026-11-22)
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
 2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
+3. **The fidelity scale is defined by behaviour, not method** (adopted 2026-11-22; supersedes the anchors in HANDOFF.md). Fidelity ≈ the probability that an output the fully optimised policy scores highly is actually good.
+   - 1.0 **sound**: no false positives possible
+   - 0.8 **leaks at the edges**: narrow false positives
+   - 0.5 **breaks within a run**: improves the goal, then gets exploited before training ends
+   - 0.2 **weakly correlated**: training quickly drifts to what the proxy likes
+   - ~0 **contested**: no agreed target
+
+   Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
 ## Running list: opportunities for the post (section 5)
 - **EDA licences in digital chip signoff (agreed, keep).** The expensive digital rung costs ~4–10× more in licences than in compute: ~$1.5–40M per run, against ~$0.4–4M for the compute alone. This is a disruption opportunity: cheaper or open tools of signoff quality would move the rung left. The hard part is the silicon-correlation data and foundry certification, not the code. See the chip design Q&A below.
+
+## 2026-11-22: redefining the fidelity scale by property, not method (proposal)
+**Current anchors** (from HANDOFF.md):
+- 1.0 sound by construction (Lean, game rules)
+- 0.8 strong but hackable (unit tests)
+- 0.5 a proxy that breaks under pressure (LLM judge, docking, backtests)
+- 0.2 a weak proxy
+- ~0 a contested target
+
+**Oscar's objection:** tying anchors to *methods* is wrong, because an LLM judge can be much better or worse depending on the domain (the same goes for unit tests and simulators).
+
+**Proposed operational definition:** fidelity ≈ *the probability that an output the fully optimised policy scores highly is actually good*. That's the precision of the reward at the top, measured after optimisation. It matches the original framing (false positives matter; false negatives mostly waste signal) and says nothing about method.
+
+**Proposed anchors, described by behaviour under optimisation:**
+- **1.0, sound:** no false positives are possible. Maximising the reward *is* achieving the goal.
+- **0.8, locally leaky:** false positives exist but are narrow (untested edge cases, gaps in coverage). Optimising mostly improves the goal.
+- **0.5, Goodharts within a run:** the goal improves at first, then the policy finds and exploits the proxy's gaps before training ends.
+- **0.2, weakly correlated:** the reward tracks the goal on typical outputs, but optimisation quickly moves to what the proxy likes and the goal doesn't.
+- **~0, contested:** no agreed target to be faithful to.
+
+Methods then become *examples that can land anywhere*:
+- an LLM judge checking whether two maths answers are equivalent: ~0.9
+- a rubric judge on legal memos: ~0.5
+- an LLM judge of literary greatness: ~0.2
+- likewise unit tests (~0.6 for a thin suite, ~0.9 with an oracle) and simulators (locomotion ~0.8, manipulation ~0.4).
+
+## 2026-11-22: how good are LLM judges under optimisation pressure?
+Oscar's challenge: the LLM-judge fidelities look high. What's the evidence?
+
+**Evidence that judges agree with humans, at evaluation time (no optimiser pushing):**
+- MT-Bench (Zheng et al. 2023): GPT-4 agreed with human preferences ~80% of the time, about the same as humans agree with each other (from memory). This says nothing about robustness *under optimisation*, which is what the y axis measures.
+
+**Evidence that judges break under optimisation pressure:**
+- **Reward-model over-optimisation** (Gao et al. 2022, from memory): as a policy optimises harder against a learned reward model, the true ("gold") reward first rises, then falls. The proxy keeps going up. This is the structural version of the problem, and it applies to any learned judge.
+- **Length and style hacking in RLHF** (e.g. Singhal et al. 2023, from memory): much of the measured RLHF gain came from longer answers.
+- **"Master keys"** ([One Token to Fool LLM-as-a-Judge](https://arxiv.org/abs/2507.08794), NeurIPS 2025): a reply of just ":" or "Thought process:" earned false-positive rewards. GPT-4o was fooled up to 35% of the time; some open 70B models 60–90%. o1 and Claude 4 were also affected. Adversarial training (their Master-RM) cut this to ~0%. So *specific* exploits are patchable (principle 1 calls them bugs). The general divergence above isn't.
+- **Rubric judges check presence, not quality** (Thomson Reuters, Aug 2026): a policy can learn to tick every criterion while making errors an attorney would catch.
+
+**Conclusion (Claude):**
+- The evidence for judges being robust *under pressure* is weak, and the evidence against is strong. The scale's own anchor puts "LLM judge" at 0.5, "a proxy that breaks under pressure".
+- Rubric judges with concrete, checkable criteria deserve a bit more than holistic ones, and citation checks are close to sound for the narrow question of hallucinated citations.
+- But **0.55–0.70 for the law rubric rungs is generous**. Proposed:
+  - research memos (rubric + citation check): **0.45–0.60**
+  - drafting (rubric/playbook): **0.40–0.55**
+  - The novel's LLM judge (0.14–0.30) is already low, because its target is contested. The computer-use ellipse is mostly scripted checks and unaffected.
+- Not yet applied.
+
+---
 
 ## 2026-11-22: law, first-pass ellipses (not yet plotted)
 

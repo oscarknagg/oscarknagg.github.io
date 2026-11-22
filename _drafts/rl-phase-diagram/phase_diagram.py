@@ -64,9 +64,29 @@ TASKS = [
          forbidden=[2], arcs={0: 0.2},  # bend under the manipulation ellipse
          note=((8.45, 0.885), "real rung: exploring on\npublic roads isn't allowed")),
     dict(name="Writing a great novel", cat="human", label_at=(8.75, 0.215),
-         rungs=[(6.7, 0.35, 0.22, 0.08, "LLM\njudge"), (9.9, 0.3, 0.48, 0.08, "human\nreaders")]),
+         rungs=[(6.7, 0.35, 0.22, 0.08, "LLM\njudge"), (9.9, 0.3, 0.48, 0.08, "human\nreaders")],
+         beyond=((11.9, 0.70), "\u201cstands the test of time\u201d:\ndecades away, off the chart")),
     dict(name="Drug efficacy\n(Phase 3 trials)", cat="human", label_at=(14.6, 0.845),
          rungs=[(14.6, 0.6, 0.93, 0.04, "")]),
+]
+
+# Law tasks: first pass, shown on their own in law_preview.png until reviewed.
+# beyond: an arrow from the last rung to a point off to the right, for a true
+# test that can't be put on the chart.
+LAW_TASKS = [
+    dict(name="Document review / diligence", cat="human",
+         rungs=[(4.6, 0.9, 0.70, 0.10, "")]),
+    dict(name="Research memos", cat="human",
+         rungs=[(6.2, 0.5, 0.525, 0.075, "rubric judge + citations", (-0.25, 0.02)),
+                (9.1, 0.5, 0.75, 0.05, "lawyer grading")]),
+    dict(name="Contract drafting", cat="human",
+         rungs=[(6.2, 0.5, 0.475, 0.075, "rubric / playbook judge", (0.25, -0.02)),
+                (10.0, 0.3, 0.70, 0.05, "partner review")],
+         beyond=((12.0, 0.85), "true test: does it hold up in\na dispute years later?")),
+    dict(name="Litigation", cat="human",
+         rungs=[(5.2, 0.5, 0.375, 0.075, "historical rulings"),
+                (10.2, 0.5, 0.55, 0.05, "mock trial")],
+         beyond=((12.2, 0.64), "real rulings: can't experiment\non live cases; years of latency")),
 ]
 
 
@@ -88,7 +108,7 @@ def flat(text):
     return text.replace("\n", " ")
 
 
-def main():
+def draw(tasks, out, title, subtitle):
     """Faint uncertainty ellipses, a numbered badge at each centre, names in a key."""
     fig = plt.figure(figsize=(16, 9))
     fig.patch.set_facecolor(SURFACE)
@@ -114,7 +134,7 @@ def main():
 
     # Number tasks by category, then by cost of their cheapest rung
     cats = list(CATS)
-    order = sorted(TASKS, key=lambda t: (cats.index(t["cat"]), t["rungs"][0][0]))
+    order = sorted(tasks, key=lambda t: (cats.index(t["cat"]), t["rungs"][0][0]))
     entries = []
     for n, t in enumerate(order, start=1):
         _, color = CATS[t["cat"]]
@@ -152,14 +172,17 @@ def main():
                               ec=color, lw=1.2))
             if multi:
                 parts.append(f"{'abcd'[i]} {flat(lab)}" + (" *" if open_badge else ""))
+        if "beyond" in t:
+            (ex, ey), etext = t["beyond"]
+            lx, lxw, ly, lyw = rungs[-1][:4]
+            c = np.array([lx, ly])
+            start = edge_point(c, np.array([ex, ey]) - c, lxw, lyw)
+            ax.annotate("", xy=(ex, ey), xytext=start,
+                        arrowprops=dict(arrowstyle="->", color=color, lw=1.2, alpha=0.75,
+                                        linestyle=(0, (4, 3))))
+            ax.text(ex + 0.1, ey, etext, fontsize=8, color=INK2, va="center")
+            parts.append("off chart")
         entries.append((t["cat"], n, flat(t["name"]), " \u2192 ".join(parts)))
-
-    # Novel: the true test is off the chart
-    ax.annotate("", xy=(11.9, 0.70), xytext=(10.15, 0.535),
-                arrowprops=dict(arrowstyle="->", color=CATS["human"][1], lw=1.2, alpha=0.75,
-                                linestyle=(0, (4, 3))))
-    ax.text(12.0, 0.70, "\u201cstands the test of time\u201d:\ndecades away, off the chart",
-            fontsize=8, color=INK2, va="center")
 
     # Axes
     ax.set_xlim(xmin, xmax)
@@ -168,8 +191,9 @@ def main():
     ax.set_xticks(ticks)
     ax.set_xticklabels([money(x) for x in ticks])
     ax.set_xticks(range(-1, 17), minor=True)
-    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.set_yticklabels(["0\ncontested\ntarget", "0.2", "0.4", "0.6", "0.8", "1.0\nsound by\nconstruction"])
+    ax.set_yticks([0, 0.2, 0.5, 0.8, 1.0])
+    ax.set_yticklabels(["0  contested", "0.2  weakly\ncorrelated", "0.5  breaks\nwithin a run",
+                        "0.8  leaks at\nthe edges", "1.0  sound"])
     ax.grid(True, which="major", color=GRID, lw=0.7, zorder=0)
     ax.tick_params(colors=INK2, labelsize=9, length=0)
     ax.tick_params(which="minor", length=0)
@@ -202,13 +226,23 @@ def main():
              "but RL exploration isn't allowed.", fontsize=8, color=INK2,
              transform=key.transAxes, va="top")
 
-    fig.suptitle("Where RL can reach: reward fidelity vs reward cost, November 2026",
+    fig.suptitle(title,
                  x=0.065, ha="left", fontsize=15, color=INK, fontweight="bold", y=0.97)
-    fig.text(0.065, 0.925, "Each ellipse is a rough judgement with its uncertainty; the badge marks its centre. "
-             "Generation cost and success rates are ignored.", fontsize=9.5, color=INK2, ha="left")
+    fig.text(0.065, 0.925, subtitle, fontsize=9.5, color=INK2, ha="left")
 
     for ext in ("png", "svg"):
-        fig.savefig(f"phase_diagram_2026.{ext}", dpi=200, facecolor=SURFACE)
+        fig.savefig(f"{out}.{ext}", dpi=200, facecolor=SURFACE)
+    plt.close(fig)
+
+
+SUBTITLE = ("Each ellipse is a rough judgement with its uncertainty; the badge marks its centre. "
+            "Generation cost and success rates are ignored.")
+
+
+def main():
+    draw(TASKS, "phase_diagram_2026",
+         "Where RL can reach: reward fidelity vs reward cost, November 2026", SUBTITLE)
+    draw(LAW_TASKS, "law_preview", "Law tasks against the frontier (first pass, Nov 2026)", SUBTITLE)
 
 
 if __name__ == "__main__":
