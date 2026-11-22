@@ -27,7 +27,7 @@ CATS = {
 }
 
 # ---- tasks -----------------------------------------------------------------
-# Each rung: (x_centre, x_halfwidth, y_centre, y_halfwidth, rung_label)
+# Each rung: (x_centre, x_halfwidth, y_centre, y_halfwidth, rung_label[, (label_dx, label_dy)])
 # x is log10(USD per run). Ladders are drawn as rungs joined by a dashed line.
 # forbidden: indices of rungs whose reward exists but where RL exploration
 # isn't allowed (public roads, patients). Drawn hatched.
@@ -44,10 +44,17 @@ TASKS = [
          rungs=[(5.55, 0.45, 0.725, 0.075, "")]),
     dict(name="Small-scale pretraining research", cat="digital", label_at=(9.2, 0.725),
          rungs=[(7.3, 0.4, 0.42, 0.07, "100M"), (9.2, 0.4, 0.62, 0.07, "1B")]),
+    dict(name="Digital chip design", cat="digital", label_at=(6.9, 0.99),
+         rungs=[(4.5, 1.0, 0.775, 0.075, "RTL + open synth", (0.25, -0.06)),
+                (6.9, 0.7, 0.90, 0.05, "signoff", (-0.4, 0.025))]),
+    dict(name="Analog chip design", cat="physical", label_at=(11.05, 1.02),
+         rungs=[(4.7, 2.0, 0.625, 0.125, "SPICE"), (6.85, 0.85, 0.885, 0.035, "post-layout", (-0.1, -0.022)),
+                (11.05, 0.65, 0.95, 0.03, "silicon")],
+         rung_label_offset=-0.07),
     dict(name="Locomotion (sim)", cat="physical", label_at=(1.2, 0.725),
          rungs=[(1.2, 0.5, 0.82, 0.06, "")]),
     dict(name="Robotic\nmanipulation", cat="physical", label_at=(2.7, 0.45),
-         rungs=[(2.7, 1.0, 0.42, 0.13, "sim"), (7.2, 0.5, 0.90, 0.05, "real")],
+         rungs=[(2.7, 1.0, 0.42, 0.13, "sim"), (7.2, 0.5, 0.90, 0.05, "real", (0.3, 0.02))],
          rung_label_offset=-0.06),
     dict(name="Self-driving", cat="physical", label_at=(8.45, 0.935), ha="left",
          rungs=[(1.5, 0.45, 0.18, 0.07, "object\nsim"), (6.7, 0.45, 0.60, 0.10, "sensor\nsim"),
@@ -106,7 +113,9 @@ def main():
                         arrowprops=dict(arrowstyle="->", color=color, lw=1.5,
                                         linestyle=(0, (4, 3)), shrinkA=0, shrinkB=2,
                                         connectionstyle=f"arc3,rad={t.get('arcs', {}).get(k, 0)}"))
-        for i, (x, xw, y, yw, rl) in enumerate(rungs):
+        for i, r in enumerate(rungs):
+            x, xw, y, yw, rl = r[:5]
+            ldx, ldy = r[5] if len(r) > 5 else (0, 0)
             if i in t.get("forbidden", ()):
                 ax.add_patch(Ellipse((x, y), 2 * xw, 2 * yw, facecolor=SURFACE, hatch="////",
                                      edgecolor=color, lw=0, alpha=0.55, zorder=3))
@@ -119,7 +128,8 @@ def main():
                                      edgecolor=color, lw=1.8, zorder=4))
             if rl:
                 off = t.get("rung_label_offset", 0) if (x, y) == (rungs[0][0], rungs[0][2]) else 0
-                ax.text(x, y + off, rl, fontsize=8, color=INK2, ha="center", va="center", zorder=5)
+                ax.text(x + ldx, y + off + ldy, rl, fontsize=8, color=INK2, ha="center", va="center",
+                        zorder=7, bbox=dict(boxstyle="round,pad=0.12", fc=SURFACE, ec="none", alpha=0.75))
         if "note" in t:
             (nx, ny), ntext = t["note"]
             ax.text(nx, ny, ntext, fontsize=7.5, color=INK2, ha="left", va="top", zorder=6)
