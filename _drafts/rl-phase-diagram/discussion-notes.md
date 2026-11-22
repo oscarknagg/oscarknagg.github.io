@@ -16,6 +16,44 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: materials Q&A (cost breakdown, workflow, better DFT)
+
+### Cost breakdown for "new compounds"
+- **a. ML potential (~$5K–500K per run).** Relaxing a 50–200 atom structure takes ~100–1,000 force evaluations at ~1–100 ms each on a GPU, so ~0.1–100 GPU-s, typically ~10 GPU-s. At ~$2.90/GPU-hour that's ~$0.008 per structure (range ~$0.0001–0.08), and × 5M ≈ $40K (range ~$0.5K–400K).
+- **b. DFT (~$20–200M per run).** A standard (PBE) relaxation of a ~50-atom cell takes ~100–1,000 core-hours, so ~$4–40 per structure. Higher accuracy multiplies this:
+  - hybrid functionals: ×10–100
+  - battery- or catalyst-relevant properties (voltages, ion-migration barriers, adsorption energies): ×10–100 again, since each needs many calculations
+  - So property-level DFT could reach ~$1–20B per run. Code licences (e.g. VASP) are negligible next to compute.
+- **c. Autonomous lab (~$0.5–10B per run; widened from $0.5–5B).** A lab costs ~$2–5M to build, amortised over ~5 years, plus staff and running costs, so ~$1–2M/year. At ~20 synthesis attempts per day (~7K/year; A-Lab's 17-day run suggests that order, but check its recipe count) that's ~$150–300 per attempt, plus precursors (~$10–100s, more for rare elements). Call it ~$100–2,000 per experiment.
+  - **Throughput binds first:** 5M experiments ≈ ~700 lab-years.
+
+### Standard workflow for a new material (battery cathode, catalyst)
+1. **Define targets:** e.g. for a cathode, capacity, voltage, stability, cost, no cobalt. For a catalyst, activity, selectivity, lifetime.
+2. **Generate candidates:** literature, chemical intuition, substituting elements in known compounds, database screening (Materials Project), and now generative models.
+3. **Compute and screen:** stability (distance from the convex hull), then property calculations: battery voltage and ion-migration barriers; catalyst adsorption energies as "descriptors" (Sabatier volcano plots).
+4. **Synthesise:** solid-state (grind precursors, heat in a furnace), sol-gel, hydrothermal. Many iterations on temperature, time and atmosphere.
+5. **Characterise:** XRD (crystal structure / phase), electron microscopy, spectroscopy, composition.
+6. **Test properties:** batteries go into coin cells and are cycled for weeks to months; catalysts run in a reactor for hours to months.
+7. **Scale up and process:** grams → kilograms → tonnes. Particle size, coatings, electrode formulation, manufacturing yield and cost. Often where candidates die.
+8. **Qualify and integrate:** full cells and packs, safety (abuse) tests, years of durability data.
+
+Discovery to market is typically 10–20 years (from memory). Steps 3, 4–6 and 6–8 map onto the rungs: computation (rungs a/b), lab (c), durability (task 2).
+
+### Can AI make DFT more accurate, e.g. by writing better code?
+**Yes, by two different routes, and both are a nice cross-domain point: AI improving the *reward* for other AI.**
+
+- **Better physics (moves the DFT rung *up*).**
+  - Learned exchange-correlation functionals: DeepMind DM21 (2021, from memory), and Microsoft **Skala** ([arXiv 2506.14665](https://arxiv.org/abs/2506.14665), June 2025). Skala claims chemical accuracy (<1 kcal/mol) on small-molecule atomisation energies and 2.8 kcal/mol on the GMTKN55 benchmark, beating hybrid functionals at roughly semi-local cost. It's a preprint, and I haven't seen independent validation.
+  - ML potentials trained on *better-than-DFT* reference data (coupled cluster) could beat DFT at ML-potential cost.
+- **Better code (moves the DFT rung *left*).**
+  - Major DFT codes are decades-old Fortran, much of it CPU-bound. Porting to GPUs and better algorithms is exactly **kernel optimisation / SWE with an oracle**: the old code is the reference, so equivalence plus timing is a near-sound reward. Those tasks are already *inside* the frontier.
+  - Cheaper DFT also buys fidelity indirectly: the same budget affords hybrid functionals or higher-level methods.
+- **Limits:**
+  - Training a better functional has its own reward problem. Reference data (coupled cluster) exists mainly for small molecules, and experimental data for solids is scarce, so there's a risk of overfitting to benchmarks like GMTKN55.
+  - Even perfect DFT only fixes *energies*. The rung's main fidelity gap is synthesisability ("can it be made?"), which needs models trained on lab data.
+  - So better DFT might lift rung b from ~0.5–0.65 to ~0.6–0.75, but not to "sound".
+- **Possible framing for the post:** *tasks inside the frontier (code optimisation) can be used to move tasks outside it (scientific simulation).* That's a general mechanism by which the frontier expands.
+
 ## 2026-11-22: materials science, first pass (materials_preview.png; not on the main plot)
 
 **Framing:** a frontier LLM proposes a material (and its synthesis or processing route) end to end, and is rewarded by simulation, a lab or real-world tests.
@@ -204,6 +242,9 @@ Pay is US. ✓ = confirmed from a BLS page or Gartner during this session; every
 **Pattern worth considering for the post:** pay and economic value pile up in the low-fidelity, expensive corner of the plot. The handoff's law point generalises: *verifiability runs inversely to billing rate*. Document review (~$30–60/hour) is verifiable; partner judgement ($1,000+/hour) isn't. A side chart of fidelity against pay might make this point compactly.
 
 **Sources confirmed this session:** BLS [lawyers](https://www.bls.gov/ooh/legal/lawyers.htm), [chemists and materials scientists](https://www.bls.gov/ooh/life-physical-and-social-science/chemists-and-materials-scientists.htm), [economists](https://www.bls.gov/ooh/life-physical-and-social-science/economists.htm), [highest-paying occupations](https://www.bls.gov/ooh/highest-paying.htm), [business and financial occupations](https://www.bls.gov/ooh/business-and-financial/). Everything else needs checking.
+
+- **Materials: AI-built simulators.** Faster DFT codes (GPU ports: a kernel-optimisation/SWE-with-oracle task, already inside the frontier) and learned functionals (Microsoft Skala) move the DFT rung left and up. This is a general mechanism: tasks inside the frontier improve the rewards for tasks outside it.
+- **Materials: autonomous labs and automated characterisation.** Throughput (lab-years) and XRD interpretation bind the lab rung, not dollars.
 
 ## 2026-11-22: chip ladders accepted
 Oscar is happy with the digital (RTL + open synth → signoff) and analog (SPICE → post-layout → silicon) ladders as plotted.
