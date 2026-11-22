@@ -16,6 +16,19 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: judgement preview plot (judgement_preview.png; not on the main plot)
+
+| Task | Rungs (cost per run; fidelity) |
+|---|---|
+| Long-term research direction | citations as reward (~$5–50K; 0.05–0.2; Goodharts) → expert panels (~$0.5–5B; 0.15–0.3; peer-review scores only weakly predict later impact, from memory) → real impact (decades, off chart) |
+| Business strategy | LLM judge on case studies (~$1–5M; 0.05–0.2) → simulated markets (~$0.1–5B; 0–0.2) → real outcomes (years, n = 1, no counterfactual; off chart) |
+| Public policy: budget cost | fiscal microsimulation (~$1–50M; ~0.5). Only the accounting, not behaviour |
+| Public policy: behavioural effects | agent-society sims (~$0.2–5B; 0–0.2) → real outcomes (can't experiment on societies; off chart) |
+| Writing a great novel | (existing) LLM judge → human readers → "stands the test of time" |
+
+- **The visual point:** in this domain, the expensive rungs buy little or no extra fidelity. The ladders run mostly *rightwards*, not upwards. That's the opposite of chips or robotics.
+- Policy is split into two tasks because its two rungs measure different things (budget accounting vs behaviour), and drawing them as one ladder would have gone downhill.
+
 ## 2026-11-22: scope decisions
 - **No product/marketing task.** Oscar's focus for the post is the **science/tech side**. The A/B-testing notes below are kept for reference only.
 - **Business strategy (simulated markets) stays at fidelity 0–0.2.**
