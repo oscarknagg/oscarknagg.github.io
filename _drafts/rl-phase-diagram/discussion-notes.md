@@ -18,7 +18,7 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
   - The task set is the Legal Agent Benchmark: agents produce "memos, marked-up contracts, diligence summaries".
   - **Reward: an LLM judge grades each deliverable "against dozens of concrete criteria"**, i.e. a rubric. Lawyer authorship of the rubrics isn't described.
   - "Tens of thousands of long-horizon rollouts per checkpoint".
-  - **~$5.92 per task** to evaluate. Unclear whether that includes running the agent.
+  - Cost: "Harvey Tenet runs at $5.92 per LAB task against $5.62 for base Kimi K3". **That's the cost of running the model on a task (policy generation, perhaps plus grading). It is not a reward cost**, and the page doesn't break it down. *(Corrected: an earlier version of these notes wrongly called it an evaluation cost and used it as the top of the judge-cost range.)*
   - Results: 19.7% all-pass on the benchmark vs 10.8% for base Kimi K3. Mercor Apex Corporate Law 58.8% → 74.0%; Redline Bench 49.3% → 55.5%.
   - A full training write-up is promised. Harvey's own posts: [post-training update](https://www.harvey.ai/blog/post-training-update-harvey-tenet), [Legal Agent Benchmark](https://www.harvey.ai/blog/introducing-harveys-legal-agent-benchmark) (not yet read).
 - **Vals legal AI reports:**
@@ -36,9 +36,9 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 | Task | Rung | Reward | Cost per run | Fidelity |
 |---|---|---|---|---|
 | **Document review / diligence** | — | Compare against adjudicated labels. Comparison is ~free; labelling is amortised (~$2–5 per label at ~$50/hour, reused across rollouts). | **~$5K–300K** | **0.60–0.80** (lowered from the handoff's 0.75–0.85 because of reviewer disagreement) |
-| **Research memos** | a | Rubric LLM judge + automated citation check (Harvey-style) | **~$0.5–30M** (≈$0.1–6 per memo; Harvey's $5.92 is the top end) | **0.55–0.70** |
+| **Research memos** | a | Rubric LLM judge + automated citation check (Harvey-style) | **~$0.5–5M** (≈$0.1–1 per memo: a judge reads a ~10–100K-token deliverable plus sources against dozens of criteria) | **0.55–0.70** |
 | | b | Lawyer grading, 30–90 min at ~$150–500/hour | **~$0.4–4B** | **0.70–0.80** (experts disagree too) |
-| **Drafting / contract mark-up** | a | Rubric or playbook LLM judge | **~$0.5–30M** | **0.50–0.65** |
+| **Drafting / contract mark-up** | a | Rubric or playbook LLM judge | **~$0.5–5M** | **0.50–0.65** |
 | | b | Partner review, ~1–2 hours at partner rates | **~$5–20B** | **0.65–0.75** |
 | | → | The true test (does the contract hold up in a dispute years later) can't be observed: arrow off the chart, like the novel | | |
 | **Litigation** | a | Predict rulings from historical dockets | **~$50K–500K** | **0.30–0.45** (predicting ≠ winning; facts outside the record; temporal leakage) |
