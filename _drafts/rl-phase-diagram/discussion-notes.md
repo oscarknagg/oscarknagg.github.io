@@ -4,6 +4,28 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
 ---
 
+## Consequences of the chart → future predictions (Oscar's list, 2026-11-22, with Claude's comments)
+1. **Higher-fidelity reward models / judges for judgement-heavy domains like law.** Oscar's anecdote: models now seem very good at diagnosing minor illnesses, presumably from training against medical rubrics.
+   - *Claude:* the sharper version is about *rubric availability*. Medical Q&A got large physician-written rubric sets (e.g. OpenAI's HealthBench, May 2025, ~5K conversations with rubrics from ~260 physicians, from memory). Diagnosis also has a checkable answer, and law drafting doesn't.
+   - *Prediction shape:* "a large lawyer-written rubric set is published, and models trained against it beat lawyer graders on drafting by date X".
+2. **Structure → property models as rewards** ("design a material with properties X", scored by a learned property model). An argument for *scientific world models*, not video world models.
+   - *Claude:* this is exactly the materials cheap rung, whose fidelity (~0.3–0.5) is the bottleneck. The risk is the optimiser exploiting the property model outside its training data, so it needs active learning (DFT or lab checks on the top candidates).
+   - **The natural metric is our fidelity definition:** the *lab-confirmed hit rate of the top-ranked candidates after optimisation*.
+   - *Prediction shape:* "a property model used as an RL reward yields candidates with a ≥X% lab-confirmed hit rate".
+3. **Better sim fidelity → big gains in robotics and driving. How do domain randomisation and in-context learning fit?**
+   - *Claude:*
+     - **Domain randomisation** can be modelled as *raising the fidelity of the sim reward*. Training on the expected reward across many randomised sims means exploits specific to one sim setting stop paying, much like a judge ensemble. What's left is the *systematic* error shared by every sim variant (e.g. unmodelled contact and deformables). So DR raises fidelity up to the level of the shared bias. That explains locomotion (DR works; errors are mostly randomisable) vs manipulation (systematic gaps).
+     - **In-context adaptation** (e.g. Rapid Motor Adaptation, 2021, from memory) extends this. The policy infers the dynamics at test time, so what matters is whether reality lies *inside the training distribution*, not whether any single sim matches it.
+     - Caveat: fidelity then belongs to a *distribution* of rewards, not a single one. Fine for the post, worth a sentence.
+4. **Lower rungs are easier to RL, so we may get models that are very good at producing promising candidates, and a massive bottleneck at validation. That creates pressure to loosen regulation.**
+   - *Claude:* GNoME is the existing example (2.2M candidates, very few made). Further consequences:
+     - investment shifts to the bottleneck rung (autonomous labs, testing infrastructure)
+     - value accrues to whoever owns the expensive validation rung (labs, foundries, signoff tools, trial networks): the *picks and shovels of verification*
+   - *Prediction shape:* "the backlog of AI-proposed candidates awaiting validation grows faster than validation capacity".
+5. **Sample efficiency (via RSI) makes RL on real robots and other expensive rewards plausible. And what about ICL / learning to adapt in context?**
+   - *Claude:* there's already evidence that real-robot RL works at *small N*. HIL-SERL (Luo et al. 2024, from memory) learned manipulation tasks to near-100% success in ~1–2.5 hours of real-world training, with demos and human interventions. That suggests **the fixed N = 5M is most pessimistic for robotics**, where strong priors plus demos cut N by orders of magnitude. Worth noting as a limitation of the fixed-N axis.
+   - **ICL as amortised RL:** a model meta-trained (in sim, across many tasks) to adapt in context turns the expensive real rung from a *training* cost into a *deployment/adaptation* cost with small N. In the framework it moves the real rung left without changing its fidelity.
+
 ## Standing principles for placing tasks (agreed 2026-11-22)
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
 2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
