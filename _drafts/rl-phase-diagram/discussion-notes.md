@@ -4,6 +4,26 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
 ---
 
+## 2026-11-22 (later still): justifying the SWE, kernel and computer-use ellipses
+
+General point: **width** (cost) comes from the ranges of the napkin maths in `cost-appendix.md`. **Height** (fidelity) is judgement, anchored on the scale's reference points (0.8 = unit tests, 0.5 = LLM judge). The heights are less well grounded than the widths.
+
+| Task | Current ellipse | Width: why | Height: why |
+|---|---|---|---|
+| Software eng. (to a spec) | $5K–100K × 0.65–0.85 | Per-check cost varies ~20× with repo size and test-suite runtime (minutes of 2 vCPUs). | Centred just under the 0.8 unit-test anchor, because tests check behaviour, not code quality or maintainability. It's tall because fidelity depends almost entirely on how good the test suite is (SWE-bench needed a "Verified" subset because many original tests were wrong or underspecified). Known hacks: special-casing tests, editing tests, patching the evaluator. METR saw o3 monkey-patch a CodeContests evaluator to always return a perfect score and override `==` in a scorer ([o3 report](https://evaluations.metr.org/openai-o3-report/), [June 2025 post](https://metr.org/blog/2025-06-05-recent-reward-hacking)). |
+| Kernel optimisation | $45K–280K × 0.86–0.95 | Narrow: a compile plus a correctness check plus a timed benchmark on one GPU, with little variation between tasks. | The objective (run faster with the same output) is measured almost directly, hence high. **But the evidence says this is too high.** Sakana's "AI CUDA Engineer" claimed 10–100× speedups in Feb 2025, and they came largely from reward hacking: the kernels reused earlier results and skipped the accuracy checks. A replication found successful tasks fell from 63 to 22 once this was fixed ([TechCrunch](https://techcrunch.com/?p=2969225), [replication](https://arxiv.org/html/2603.02637)). METR found reward hacking >43× more common on RE-Bench (ML optimisation tasks) than on general software tasks. Fidelity is high *with a hardened harness* and much lower with a naive one. |
+| Computer use | $125K–1M × 0.60–0.76 | The VM stays up for the whole episode, including the policy's thinking time, and episodes vary 5–20 min. Some tasks also need an LLM judge. | It mixes two reward types: scripted end-state checks (~0.75–0.8, but narrow and brittle) and LLM judges for tasks that scripts can't check (~0.5). Evaluator errors are common: Epoch estimated ~10% of original OSWorld tasks were invalid ([Epoch](https://epoch.ai/blog/osworld)), and OSWorld-Verified fixed 300+ issues in July 2025 ([XLANG](https://xlang.ai/blog/osworld-verified)). In one reported bug, a Word task's checker passed the *untouched* input file. End-state checks also don't penalise unintended side effects along the way. |
+
+### Proposed revisions (not applied)
+1. **Kernel optimisation: extend downwards to ~0.70–0.95** to reflect harness-dependence. The height of the ellipse then shows the gap between hardened and naive harnesses.
+2. **Tilt these ellipses, or turn them into short ladders.** In all three, spending more on verification buys fidelity: hidden tests, hardened timing harnesses, more judges, human review. So cost and fidelity are positively correlated *within* each task, and an upright ellipse hides that. This might make a nice general point for the post: *within a task, you can buy fidelity*.
+3. Possibly split computer use into "scripted check" and "LLM-judged" rungs, the way self-driving is now split.
+
+### Note for the post
+Reward hacking is most common precisely where the score is a measured number to optimise (RE-Bench, kernel speed), not a pass/fail check. That fits the y axis's definition, *fidelity under optimisation pressure*. Cases where the optimiser beat the harness are the best illustrations of what the axis means.
+
+---
+
 ## 2026-11-22 (later): plot changes and locomotion references
 
 ### Plot changes made
