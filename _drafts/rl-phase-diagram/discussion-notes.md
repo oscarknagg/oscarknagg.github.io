@@ -16,6 +16,45 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: synthetic consumers (arXiv 2510.08338) and real A/B tests
+
+### Maier et al. 2025, "LLMs Reproduce Human Purchase Intent via Semantic Similarity Elicitation of Likert Ratings" ([arXiv](https://arxiv.org/html/2510.08338v1); PyMC Labs + Colgate-Palmolive)
+- **Setup:**
+  - LLM "synthetic consumers" with demographic personas rate personal-care product concepts on 5-point purchase intent.
+  - 57 real concept surveys (150–400 people each, ~9,300 total).
+  - **New method (SSR):** the LLM writes a free-text answer, which is mapped to a rating distribution by embedding similarity to reference statements, instead of asking for a number directly (which gives everyone "3").
+- **Results:**
+  - "SSR achieves 90% of human test-retest reliability while maintaining realistic response distributions (KS similarity >0.85)."
+  - Without personas, correlation drops to ~50%.
+  - Age and income effects replicate; gender, region and ethnicity don't consistently.
+- **Limitations (authors'):**
+  - The reference statements were tuned on the same 57 surveys, so out-of-sample performance is unknown.
+  - Works only where the LLM knows the domain well.
+  - Ranking winners and use for optimisation were **not tested**.
+  - (The page has some internal number inconsistencies: 88% vs 90%.)
+
+**Does it change the picture? (Claude)**
+- **For strategy: no.** Like Hewitt et al., it's *evaluation-time correlation* in a narrow, familiar domain, with in-sample tuning and no optimiser pushing on it.
+- **Its target is two steps from the goal:** *stated* purchase intent → actual purchases → profit. Stated intent is known to overstate real buying.
+- **It does strengthen a narrower task**: *product concept / marketing screening*. Here synthetic consumers are a plausible cheap rung, maybe ~0.2–0.4 under optimisation (an optimiser would learn the words that please the simulated panel).
+
+### Is reward from real A/B tests possible? Yes, and it's already used, in two regimes
+1. **Per-impression rewards (feeds, ads, recommendations).**
+   - Every impression yields a click or watch-time signal. Rewards are nearly free and arrive in the billions per day, and the *measurement* is exact. RL and bandits for recommendation are long-established (e.g. YouTube's REINFORCE recommender, Chen et al. 2019, from memory). Generative ad creative optimised against live performance is also shipping (e.g. Meta's Advantage+ generative ads, from memory).
+   - The fidelity gap is **Goodhart against the true goal**: engagement ≠ long-term user value or revenue (clickbait, outrage). It's high-fidelity for the short-term metric, lower for the business goal, lower still for society.
+   - **This regime is already inside the frontier.**
+2. **Per-decision rewards (a new feature, page, price or product).**
+   - Each candidate needs thousands to millions of users for statistical significance, since effects are often ~0.1–1%, and takes days to weeks.
+   - The binding constraint is **traffic and latency, not dollars**. Large experimentation programmes run thousands to tens of thousands of tests a year (from memory, e.g. Microsoft, Booking), far short of 5M.
+   - The cost is mostly the *opportunity cost* of showing worse variants. Bandits stretch the traffic further, but an open-ended LLM search space quickly exhausts it.
+
+**Proposed new task (business domain): "Product & marketing optimisation"**, ladder:
+- synthetic consumers (~$0.1–1M; 0.2–0.4)
+- → paid survey panels (stated intent; ~$1–50B at ~$200–10,000 per concept test; ~0.5)
+- → live A/B test (traffic-limited; ~0.8 for the short-term metric, ~0.6–0.7 for long-term business value)
+
+It bridges *reachable tactical* decisions and *unreachable strategy*, and adds a third "the cost isn't dollars" case (**traffic**) alongside forecasting's latency and the lab's throughput.
+
 ## 2026-11-22: evidence on the fidelity of simulated societies and economies
 Oscar's prior: **0–0.2** for simulated business/society strategy. What does research say?
 
