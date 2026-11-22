@@ -4,6 +4,21 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
 ---
 
+## Standing principles for placing tasks (agreed 2026-11-22)
+1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
+2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
+
+## 2026-11-22: SWE extended, earlier proposals revisited
+- **Software eng. now spans 0.65–0.90 fidelity.** The top end covers SWE tasks with an *oracle*: reverse-engineering an existing program (match its behaviour), or visual feedback where a target image or reference render is the check. Oscar suspects many of Fable's one-shot JavaScript painting results come from this kind of training.
+- **Proposals from the section below, revisited under the principles above:**
+  - *Extend kernel optimisation down:* **dropped.** The Sakana case was a harness bug (reusing results, skipping accuracy checks), which principle 1 excludes.
+  - *Tilt ellipses:* **dropped** for simplicity (principle 2). The idea that "within a task you can buy fidelity" can still go in the text.
+  - *Split computer use into scripted and LLM-judged rungs:* **not done.** It may be worth revisiting if more computer-use-like tasks are added.
+  - *Open:* computer use's height was partly justified by OSWorld evaluator bugs, which principle 1 now excludes. The structural reasons remain: end-state checks don't see side effects, and some tasks need an LLM judge. Consider nudging it up slightly (e.g. 0.65–0.80).
+  - The reward-hacking examples still illustrate "optimisation pressure" well in the text, as long as they're framed as harness bugs rather than fidelity limits.
+
+---
+
 ## 2026-11-22 (later still): justifying the SWE, kernel and computer-use ellipses
 
 General point: **width** (cost) comes from the ranges of the napkin maths in `cost-appendix.md`. **Height** (fidelity) is judgement, anchored on the scale's reference points (0.8 = unit tests, 0.5 = LLM judge). The heights are less well grounded than the widths.
