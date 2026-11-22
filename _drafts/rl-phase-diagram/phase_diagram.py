@@ -130,7 +130,7 @@ def draw(tasks, out, title, subtitle, footnote=None):
     fig = plt.figure(figsize=(16, 9))
     fig.patch.set_facecolor(SURFACE)
     ax = fig.add_axes([0.085, 0.10, 0.645, 0.76])
-    key = fig.add_axes([0.755, 0.10, 0.24, 0.76])
+    key = fig.add_axes([0.755, 0.03, 0.24, 0.83])
     key.axis("off")
     ax.set_facecolor(SURFACE)
     xmin, xmax, ymin, ymax = -1.0, 16.0, 0.0, 1.08
@@ -232,23 +232,27 @@ def draw(tasks, out, title, subtitle, footnote=None):
                   fontsize=10.5, color=INK, labelpad=10)
     ax.set_ylabel("Reward fidelity under optimisation pressure", fontsize=10.5, color=INK, labelpad=10)
 
-    # Key
+    # Key: shrink spacing and type if there are many entries
+    ncat = len({e[0] for e in entries})
+    need = 0.034 * sum(2 if e[3] else 1 for e in entries) + 0.08 * ncat + 0.12
+    k = min(1.0, 1.0 / need)
+    fk = max(k, 0.72)
     y, cur = 1.0, None
     for cat, n, name, sub in entries:
         if cat != cur:
             cur = cat
-            y -= 0.015 if n == 1 else 0.035
-            key.text(0, y, CATS[cat][0], fontsize=10, fontweight="bold", color=CATS[cat][1],
+            y -= (0.015 if n == 1 else 0.035) * k
+            key.text(0, y, CATS[cat][0], fontsize=10 * fk, fontweight="bold", color=CATS[cat][1],
                      transform=key.transAxes, va="top")
-            y -= 0.045
-        key.text(0, y, f"{n:>2}", fontsize=9.5, color=CATS[cat][1], fontweight="bold",
+            y -= 0.045 * k
+        key.text(0, y, f"{n:>2}", fontsize=9.5 * fk, color=CATS[cat][1], fontweight="bold",
                  transform=key.transAxes, va="top")
-        key.text(0.08, y, name, fontsize=9.5, color=INK, transform=key.transAxes, va="top")
-        y -= 0.034
+        key.text(0.08, y, name, fontsize=9.5 * fk, color=INK, transform=key.transAxes, va="top")
+        y -= 0.034 * k
         if sub:
-            key.text(0.08, y, sub, fontsize=8.5, color=INK2, transform=key.transAxes, va="top")
-            y -= 0.034
-    key.text(0, y - 0.03, footnote if footnote else "Letters are rungs of a ladder: a cheap proxy reward \u2192 the\n"
+            key.text(0.08, y, sub, fontsize=8.5 * fk, color=INK2, transform=key.transAxes, va="top")
+            y -= 0.034 * k
+    key.text(0, y - 0.03 * k, footnote if footnote else "Letters are rungs of a ladder: a cheap proxy reward \u2192 the\n"
              "expensive real one. * Hatched, open badge: the reward exists,\n"
              "but RL exploration isn't allowed.", fontsize=8, color=INK2,
              transform=key.transAxes, va="top")
@@ -283,7 +287,7 @@ OVERVIEW_NOTE = ("Each task is shown at its cheapest reward. \u2192 marks a ladd
 
 
 def main():
-    draw(TASKS, "phase_diagram_2026",
+    draw(TASKS + LAW_TASKS + MATERIALS_TASKS + JUDGEMENT_TASKS, "phase_diagram_2026",
          "Where RL can reach: reward fidelity vs reward cost, November 2026", SUBTITLE)
     novel = [t for t in TASKS if t["name"].startswith("Writing a great novel")]
     draw(JUDGEMENT_TASKS + novel, "judgement_preview",
