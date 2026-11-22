@@ -271,6 +271,20 @@ The post's question is *"given RL drives performance, what comes next?"* The fro
    - Oscar's correction: judge ensembles and adversarially trained judges (Master-RM) *raise the reward's fidelity*. That's mover 1, not a lower bar.
    - What's left is regularisation and early stopping (KL penalties, stopping before over-optimisation). These don't change the reward; they let you get *closer to its ceiling* instead of overshooting (see below). It's a second-order effect, probably not worth its own mover.
 
+### RSI: RL on pretraining loss as a frontier mover (Oscar, 2026-11-22)
+**Oscar's mechanism:** RL on pretraining validation loss → base models with lower loss → more sample-efficient RL → **fewer rollouts needed for every task** → everything moves left.
+
+**How it fits the framework (Claude):**
+- **It's a distinct mover: "N goes down".** The x axis is cost per reward × N, with N = 5M fixed. We said N is "just a constant shift on a log axis". Sample efficiency *changes that constant*: if a better base needs k× fewer rollouts, **every task moves left by log₁₀(k)**. Equivalently, the frontier's cost edge moves right by the same amount. It's the only mover that acts on all tasks at once.
+- **Evidence the link exists (check before citing):**
+  - Post-RL performance is predicted by pretraining loss (the 2026 paper in HANDOFF.md).
+  - Base-model quality strongly affects how well RL works. R1-Zero worked on a strong base; Gandhi et al. 2025 (from memory) found Qwen bases with self-verification habits respond to RL far better than Llama bases.
+  - *How much* N falls per unit of loss is not established. That's the key empirical unknown.
+- **The loop is gated by the pretraining-research task's own position.** "Small-scale pretraining research" sits *outside* the frontier: 100M at ~$20M / 0.42, 1B at ~$1.6B / 0.62. Its cost per reward is the compute to train small models, which better agents *don't* reduce. Only N falls. So the loop is: better base → fewer rollouts → the pretraining-research task moves left → more research → better base. Its speed depends on how fast N falls relative to compute prices (FLOP/$ doubling every ~2 years, per Epoch).
+- **Its fidelity is the other gate.** Small-scale gains often don't transfer to large models (Narang et al. 2021, from memory), hacking risks (tokenizer tricks, validation leakage; mitigated by bits-per-byte and a locked harness), and seed noise. Rewarding a fitted scaling trend across a size ladder raises fidelity for ~30% more cost.
+- **What it doesn't do:** moving left doesn't raise fidelity, so tasks stuck below the fidelity edge (novel, strategy) stay stuck. Better base models do help indirectly by making **better judges** (mover 1) and through **transfer**.
+- **Visual idea:** on the overview, one horizontal arrow on the frontier's cost edge labelled e.g. "10× more sample-efficient RL", rather than moving every ellipse.
+
 ### How the skill ceiling could fit into the framework (Claude's proposal; schematic in `skill_ceiling.png`)
 1. **Definition in the post:** "fidelity is how much real skill you can buy by optimising against a reward". The "probability a top-scored output is good" stays as the operational test for placing tasks.
 2. **An explainer figure in the methodology section** (left panel of `skill_ceiling.png`): real skill vs optimisation pressure for each anchor, with a "today's model skill" line. Schematic shapes, based on Gao et al.'s over-optimisation curves.
