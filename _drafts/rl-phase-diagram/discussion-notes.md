@@ -16,6 +16,11 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: judgement domain simplified (Oscar)
+- **Keep only two tasks:** *Writing a great novel* (personally interesting) and **one "Strategy" ellipse** (business, policy, research direction): ~$1M–5B, fidelity 0–0.2, with an off-chart arrow to real outcomes.
+- Its purpose is simply to show that these are **far from the frontier and too hard to train with RL today**. Research direction and policy behaviour have the same rough fidelity, so separate points add nothing.
+- Dropped: the separate research-direction, business-strategy and policy ladders, and the budget-microsimulation point. The table below is kept for reference.
+
 ## 2026-11-22: judgement preview plot (judgement_preview.png; not on the main plot)
 
 | Task | Rungs (cost per run; fidelity) |

@@ -83,19 +83,9 @@ MATERIALS_TASKS = [
 
 # Judgement tasks: first pass, shown in judgement_preview.png until reviewed.
 JUDGEMENT_TASKS = [
-    dict(name="Business strategy", cat="human",
-         rungs=[(6.35, 0.35, 0.125, 0.075, "LLM judge"),
-                (8.85, 0.85, 0.10, 0.10, "simulated markets")],
+    dict(name="Strategy (business, policy, research direction)", cat="human",
+         rungs=[(7.85, 1.85, 0.10, 0.10, "")],
          beyond=((11.6, 0.30), "real outcomes: years,\nn = 1, no counterfactual")),
-    dict(name="Public policy: budget cost", cat="human",
-         rungs=[(6.85, 0.85, 0.50, 0.07, "")]),
-    dict(name="Public policy: behavioural effects", cat="human",
-         rungs=[(9.3, 0.7, 0.12, 0.08, "agent-society sims")],
-         beyond=((11.6, 0.50), "real outcomes: can't experiment\non societies; years")),
-    dict(name="Long-term research direction", cat="human",
-         rungs=[(4.2, 0.5, 0.125, 0.075, "citations"),
-                (9.2, 0.5, 0.225, 0.075, "expert panels")],
-         beyond=((11.6, 0.86), "real impact: decades")),
 ]
 
 # beyond: an arrow from the last rung to a point off to the right, for a true
