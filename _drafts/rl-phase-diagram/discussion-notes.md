@@ -16,6 +16,10 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: scope decisions
+- **No product/marketing task.** Oscar's focus for the post is the **science/tech side**. The A/B-testing notes below are kept for reference only.
+- **Business strategy (simulated markets) stays at fidelity 0–0.2.**
+
 ## 2026-11-22: synthetic consumers (arXiv 2510.08338) and real A/B tests
 
 ### Maier et al. 2025, "LLMs Reproduce Human Purchase Intent via Semantic Similarity Elicitation of Likert Ratings" ([arXiv](https://arxiv.org/html/2510.08338v1); PyMC Labs + Colgate-Palmolive)
