@@ -8,6 +8,12 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
 2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
 
+## Running list: opportunities for the post (section 5)
+- **EDA licences in digital chip signoff (agreed, keep).** The expensive digital rung costs ~4–10× more in licences than in compute: ~$1.5–40M per run, against ~$0.4–4M for the compute alone. This is a disruption opportunity: cheaper or open tools of signoff quality would move the rung left. The hard part is the silicon-correlation data and foundry certification, not the code. See the chip design Q&A below.
+
+## 2026-11-22: chip ladders accepted
+Oscar is happy with the digital (RTL + open synth → signoff) and analog (SPICE → post-layout → silicon) ladders as plotted.
+
 ## 2026-11-22: chip design Q&A (signoff, analog uses, EDA licences)
 
 ### What "signoff" means
