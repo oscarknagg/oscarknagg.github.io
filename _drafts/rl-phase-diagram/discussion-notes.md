@@ -11,6 +11,53 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 ## Running list: opportunities for the post (section 5)
 - **EDA licences in digital chip signoff (agreed, keep).** The expensive digital rung costs ~4–10× more in licences than in compute: ~$1.5–40M per run, against ~$0.4–4M for the compute alone. This is a disruption opportunity: cheaper or open tools of signoff quality would move the rung left. The hard part is the silicon-correlation data and foundry certification, not the code. See the chip design Q&A below.
 
+## 2026-11-22: law, first-pass ellipses (not yet plotted)
+
+### Evidence
+- **Harvey + Fireworks RL on Kimi K3** ([case study](https://fireworks.ai/blog/post-training-kimi-k3-with-harvey-for-long-horizon-legal-work), Aug 2026):
+  - The task set is the Legal Agent Benchmark: agents produce "memos, marked-up contracts, diligence summaries".
+  - **Reward: an LLM judge grades each deliverable "against dozens of concrete criteria"**, i.e. a rubric. Lawyer authorship of the rubrics isn't described.
+  - "Tens of thousands of long-horizon rollouts per checkpoint".
+  - **~$5.92 per task** to evaluate. Unclear whether that includes running the agent.
+  - Results: 19.7% all-pass on the benchmark vs 10.8% for base Kimi K3. Mercor Apex Corporate Law 58.8% → 74.0%; Redline Bench 49.3% → 55.5%.
+  - A full training write-up is promised. Harvey's own posts: [post-training update](https://www.harvey.ai/blog/post-training-update-harvey-tenet), [Legal Agent Benchmark](https://www.harvey.ai/blog/introducing-harveys-legal-agent-benchmark) (not yet read).
+- **Vals legal AI reports:**
+  - [Feb 2025](https://www.vals.ai/industry-reports/vlair-2-27-25): AI beat a lawyer control group on easy tasks (document Q&A, extraction) but not on complex reasoning.
+  - [Oct 2025 legal research](https://www.vals.ai/industry-reports/vlair-10-14-25): AI tools averaged **80% vs lawyers' 71%** on 200 research questions. Humans kept an edge on multi-jurisdictional synthesis and judgement.
+  - Drafting wasn't covered.
+- **Thomson Reuters (Aug 2026):** benchmark scoring that checks whether required points are *present* misses failures a practising attorney would catch ([post](https://www.thomsonreuters.com/en-us/posts/innovation/when-legal-ai-is-evaluated-like-legal-work-the-results-change/)). This is a structural limit on rubric rewards.
+- **Reviewer disagreement in document review:**
+  - TREC Legal Track appeals reversed ~79–91% of appealed first-pass relevance calls ([TREC 2010 overview](https://trec.nist.gov/pubs/trec19/papers/LEGAL10.OVERVIEW.pdf)).
+  - A 2025 study found overlap between reviewers of only ~0.28–0.42 (Jaccard) in a real production ([arXiv](https://arxiv.org/html/2502.20937v2)).
+  - The "true" label is itself a contested judgement. That's structural, so it counts.
+
+### First-pass ellipses
+
+| Task | Rung | Reward | Cost per run | Fidelity |
+|---|---|---|---|---|
+| **Document review / diligence** | — | Compare against adjudicated labels. Comparison is ~free; labelling is amortised (~$2–5 per label at ~$50/hour, reused across rollouts). | **~$5K–300K** | **0.60–0.80** (lowered from the handoff's 0.75–0.85 because of reviewer disagreement) |
+| **Research memos** | a | Rubric LLM judge + automated citation check (Harvey-style) | **~$0.5–30M** (≈$0.1–6 per memo; Harvey's $5.92 is the top end) | **0.55–0.70** |
+| | b | Lawyer grading, 30–90 min at ~$150–500/hour | **~$0.4–4B** | **0.70–0.80** (experts disagree too) |
+| **Drafting / contract mark-up** | a | Rubric or playbook LLM judge | **~$0.5–30M** | **0.50–0.65** |
+| | b | Partner review, ~1–2 hours at partner rates | **~$5–20B** | **0.65–0.75** |
+| | → | The true test (does the contract hold up in a dispute years later) can't be observed: arrow off the chart, like the novel | | |
+| **Litigation** | a | Predict rulings from historical dockets | **~$50K–500K** | **0.30–0.45** (predicting ≠ winning; facts outside the record; temporal leakage) |
+| | b | Mock trial / moot court with expert judges | **~$5–50B** | **0.50–0.60** |
+| | c | Real rulings: hatched, because you can't run experiments on real cases; years of latency | off chart | ~0.7 |
+| **Negotiation** *(optional)* | — | Self-play against LLM counterparties | **~$0.5–10M** | **0.30–0.50** (exploits of the counterparty model are structural) |
+
+**Suggested simplifications:**
+- Drop *strategic counsel*: it overlaps with business strategy, which will be plotted anyway.
+- Negotiation is optional. It is spread across law, procurement and sales, so it might be better as a general "negotiation" task later.
+
+### Claude's reading
+1. **Document review is inside the frontier**, consistent with AI beating lawyers on easy tasks (Vals 2025). Its fidelity ceiling is set by humans disagreeing about the labels, not by the checker.
+2. **The rubric-judge rung for memos and drafting sits right at the frontier's corner** (~$5M, ~0.6). That's exactly where Harvey is training now. The step up to lawyer grading is a ~100–1,000× cost jump for only ~+0.1–0.15 fidelity, which is a strong illustration of the "ladder" idea.
+3. **Value runs the other way from fidelity:** document review is the cheapest-billed work, and litigation and counsel the most expensive. It's the clearest single example of the inverse billing-rate pattern.
+4. Research memos are close to "fallen" on the expert-graded *benchmark* (Vals: AI 80% vs lawyers 71%), even though training at that rung would be unaffordable. That's evidence for capability arriving by **transfer from the cheap rung**, the same caveat as forecasting.
+
+---
+
 ## 2026-11-22: remaining tasks, economic value and pay (first pass)
 **Dropped:** "Math/science with checkable answers". It overlaps too much with Math (Lean).
 
