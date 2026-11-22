@@ -75,14 +75,10 @@ TASKS = [
 # Law tasks: first pass, shown on their own in law_preview.png until reviewed.
 # Materials tasks: first pass, shown in materials_preview.png until reviewed.
 MATERIALS_TASKS = [
-    dict(name="Materials: new compounds / computable properties", cat="physical",
+    dict(name="Materials: new compounds", cat="physical",
          rungs=[(4.7, 1.0, 0.40, 0.10, "ML potential"),
                 (7.8, 0.5, 0.575, 0.075, "DFT"),
-                (9.2, 0.5, 0.775, 0.075, "autonomous lab")]),
-    dict(name="Materials: processing & durability", cat="physical",
-         rungs=[(5.7, 1.0, 0.30, 0.10, "process simulation"),
-                (10.5, 0.8, 0.85, 0.05, "lab tests (months)")],
-         beyond=((12.6, 0.97), "field lifetime: years")),
+                (9.35, 0.65, 0.775, 0.075, "autonomous lab")]),
 ]
 
 # beyond: an arrow from the last rung to a point off to the right, for a true

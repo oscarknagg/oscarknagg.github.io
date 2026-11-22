@@ -16,6 +16,11 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: materials scope settled
+- **Keep only "new compounds"** (ML potential → DFT → autonomous lab). **Processing & durability is dropped** from the plot and the post; the explainer below is kept for reference only.
+- The autonomous-lab rung was widened to ~$0.5–10B to match the cost breakdown.
+- **Skill-ceiling framing:** Oscar has read and discussed it and will work it into the post text himself. No further action needed here.
+
 ## 2026-11-22: what "processing & durability" means (plain-language explainer)
 - **The idea:** a material's *recipe* (which atoms) is only half the story. *How you make it* determines its microstructure: grain sizes, which crystal phases form, defects, pores, internal stresses. Microstructure largely decides the properties people pay for: strength, toughness, corrosion resistance, battery lifespan. The same steel can be soft or hard depending only on heat treatment (cooled slowly vs quenched in water).
 - **"Simulating manufacturing"** = predicting microstructure from the process steps, then properties from the microstructure. For example:
