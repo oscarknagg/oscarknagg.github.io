@@ -49,8 +49,6 @@ TASKS = [
          rung_label_offset=-0.06),
     dict(name="Self-driving", cat="physical", label_at=(8.45, 0.935), ha="left",
          rungs=[(6.6, 0.45, 0.60, 0.10, "sim"), (8.0, 0.35, 0.935, 0.04, "real")]),
-    dict(name="Forecasting", cat="human", label_at=(1.2, 0.915),
-         rungs=[(1.2, 0.45, 0.975, 0.025, "")], dashed=True),
     dict(name="Writing a great novel", cat="human", label_at=(8.75, 0.215),
          rungs=[(6.7, 0.35, 0.22, 0.08, "LLM\njudge"), (9.9, 0.3, 0.48, 0.08, "human\nreaders")]),
     dict(name="Drug efficacy\n(Phase 3 trials)", cat="human", label_at=(14.6, 0.845),
@@ -115,12 +113,7 @@ def main():
         ax.text(lx, ly, t["name"], fontsize=t.get("size", 10.5), color=INK,
                 ha=t.get("ha", "center"), va="center", zorder=6, fontweight="bold")
 
-    # Annotations for the two odd cases
-    ax.annotate("Forecasting: the reward is free\nand perfect, but takes months\nto arrive, and only ~10\u2074\u201310\u2075\n"
-                "questions resolve per year",
-                xy=(0.95, 0.952), xytext=(-0.85, 0.46), fontsize=8, color=INK2, va="center",
-                arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.8, shrinkA=2, shrinkB=2,
-                                relpos=(0.5, 1.0)))
+    # "Stands the test of time" arrow for the novel
     ax.annotate("", xy=(11.9, 0.70), xytext=(10.15, 0.535),
                 arrowprops=dict(arrowstyle="->", color=CATS["human"][1], lw=1.5,
                                 linestyle=(0, (4, 3))))
