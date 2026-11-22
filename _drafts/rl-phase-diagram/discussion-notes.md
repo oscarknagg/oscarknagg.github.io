@@ -16,6 +16,31 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 
    Any method (LLM judge, unit tests, simulator) can land anywhere on this scale, depending on the domain.
 
+## 2026-11-22: which tasks are close to the frontier, and what would move them in (Claude)
+Frontier ≈ fidelity > ~0.6 and cost < ~$1.5M per run. Life sciences is excluded for now (Oscar will supply his own analysis).
+
+| Task / rung | Now (cost; fidelity) | Gap | Main mover | What the effort looks like |
+|---|---|---|---|---|
+| **Digital chip design: signoff** | ~$8M ($1.5–40M); 0.85–0.95 | ~5× too expensive | **Cost down** | Licences are 4–10× the compute, so cheaper or open signoff-grade tools (or vendor partnerships like GPT-Synopsys) could bring it in on their own. |
+| **Law: research memos, rubric judge** | ~$1.5M; 0.45–0.60 | ~+0.05–0.15 fidelity | **Fidelity up** | Lawyer-written rubrics, adversarially trained judges, sound citation verification. Harvey is already training here. |
+| **Law: contract drafting, rubric judge** | ~$1.5M; 0.40–0.55 | ~+0.1–0.2 | Fidelity up | As above, plus checks against firm playbooks. Harder, because "good drafting" is less checkable than "correct citations". |
+| **Analog chips: SPICE** | ~$50K ($500–5M); 0.50–0.75 | Already straddles; ~+0.05–0.1 to be clearly in | Fidelity up | Layout-aware / parasitic-estimating simulation. The *real* blocker is access (PDKs, proprietary designs), not the reward. |
+| **Self-driving: sensor-level sim** | ~$4M; 0.50–0.70 | ~3× cheaper and ~+0.05 | Both | Neural world-model simulators make rendering cheaper and more realistic. |
+| **Materials: ML potential** | ~$40K; 0.30–0.50 | **+0.1–0.3 fidelity** (cost is fine) | Fidelity up | Bigger potentials trained on better data, plus *active learning*: occasional DFT checks on the structures the optimiser likes best (a mini-ladder that patches exploits). |
+| **Materials: DFT** | ~$20–200M; 0.50–0.65 | 10–100× cheaper, +0.05–0.1 | Both | AI-written GPU DFT codes (cost) and learned functionals like Skala (fidelity). |
+| **Robotic manipulation: real** | ~$16M; 0.85–0.95 | ~10× cheaper | Cost down / budget up | Robot fleets with autonomous resets; falling hardware costs. |
+| *Far away (for contrast):* manipulation sim (fidelity ~0.4), small-scale pretraining (1B at ~$1.6B), novel, litigation, strategy | | | | |
+
+**Observations for the post:**
+1. **The crowded band is the next frontier.** The region we kept struggling to label, ~$1M–100M at fidelity ~0.85–0.95 (digital signoff, real-robot manipulation, analog post-layout), is exactly what a **~10× bigger per-run budget** (mover 3) or ~10× cheaper rewards (mover 2) would bring inside. One budget step brings in a whole cluster of high-fidelity rewards at once.
+2. **Two kinds of "nearly there":**
+   - *expensive but sound* (chips signoff, real robots): just needs money or cheaper tools
+   - *cheap but leaky* (law rubrics, ML potentials): needs better judges or models
+   The off-diagonal corners again: the handoff's point that "cheap but unsound needs better verifiers; sound but expensive needs cheaper rungs".
+3. **Prediction candidates:**
+   - RL-trained models doing end-to-end digital block design through signoff, by a stated date.
+   - Law rubric-trained models beating lawyer graders on drafting benchmarks.
+
 ## 2026-11-22: judgement domain simplified (Oscar)
 - **Keep only two tasks:** *Writing a great novel* (personally interesting) and **one "Strategy" ellipse** (business, policy, research direction): ~$1M–5B, fidelity 0–0.2, with an off-chart arrow to real outcomes.
 - Its purpose is simply to show that these are **far from the frontier and too hard to train with RL today**. Research direction and policy behaviour have the same rough fidelity, so separate points add nothing.
