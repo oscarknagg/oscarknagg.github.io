@@ -108,7 +108,7 @@ def flat(text):
     return text.replace("\n", " ")
 
 
-def draw(tasks, out, title, subtitle):
+def draw(tasks, out, title, subtitle, footnote=None):
     """Faint uncertainty ellipses, a numbered badge at each centre, names in a key."""
     fig = plt.figure(figsize=(16, 9))
     fig.patch.set_facecolor(SURFACE)
@@ -182,7 +182,17 @@ def draw(tasks, out, title, subtitle):
                                         linestyle=(0, (4, 3))))
             ax.text(ex + 0.1, ey, etext, fontsize=8, color=INK2, va="center")
             parts.append("off chart")
-        entries.append((t["cat"], n, flat(t["name"]), " \u2192 ".join(parts)))
+        if "stub" in t:
+            # Overview: short arrow towards the task's next (costlier) rung
+            (x0, xw0, y0, yw0), (x1, y1) = t["rungs"][0][:4], t["stub"]
+            d = np.array([x1 - x0, (y1 - y0) * 12])
+            d /= np.linalg.norm(d)
+            d = np.array([d[0], d[1] / 12])
+            start = edge_point(np.array([x0, y0]), d, xw0, yw0)
+            ax.annotate("", xy=start + 0.9 * d, xytext=start, zorder=2,
+                        arrowprops=dict(arrowstyle="->", color=color, lw=1.3, alpha=0.8))
+        name = flat(t["name"]) + ("  \u2192" if "stub" in t else "")
+        entries.append((t["cat"], n, name, " \u2192 ".join(parts)))
 
     # Axes
     ax.set_xlim(xmin, xmax)
@@ -221,7 +231,7 @@ def draw(tasks, out, title, subtitle):
         if sub:
             key.text(0.08, y, sub, fontsize=8.5, color=INK2, transform=key.transAxes, va="top")
             y -= 0.034
-    key.text(0, y - 0.03, "Letters are rungs of a ladder: a cheap proxy reward \u2192 the\n"
+    key.text(0, y - 0.03, footnote if footnote else "Letters are rungs of a ladder: a cheap proxy reward \u2192 the\n"
              "expensive real one. * Hatched, open badge: the reward exists,\n"
              "but RL exploration isn't allowed.", fontsize=8, color=INK2,
              transform=key.transAxes, va="top")
@@ -237,6 +247,22 @@ def draw(tasks, out, title, subtitle):
 
 SUBTITLE = ("Each ellipse is a rough judgement with its uncertainty; the badge marks its centre. "
             "Generation cost and success rates are ignored.")
+
+
+def overview_tasks(tasks):
+    """One ellipse per task: its cheapest rung, with a stub towards the next rung."""
+    out = []
+    for t in tasks:
+        r = t["rungs"]
+        o = dict(name=t["name"], cat=t["cat"], rungs=[r[0]])
+        if len(r) > 1:
+            o["stub"] = (r[1][0], r[1][2])
+        out.append(o)
+    return out
+
+
+OVERVIEW_NOTE = ("Each task is shown at its cheapest reward. \u2192 marks a ladder: costlier,\n"
+                 "higher-fidelity rewards exist (see the per-domain plots).")
 
 
 def main():
