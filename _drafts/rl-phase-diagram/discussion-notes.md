@@ -8,6 +8,47 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
 2. **Keep the plot as simple as possible while carrying the detail.** Many more tasks are coming, so prefer upright ellipses and only split a task into rungs when the rungs are genuinely different reward sources.
 
+## 2026-11-22: chip design, first-pass ellipses (not yet plotted)
+
+**Framing (Oscar):** the case of interest is *end-to-end task completion by a frontier LLM*, the most bitter-lessoned version: spec in → block out, with the LLM driving the EDA tools and iterating on their feedback. Narrow optimisers like AlphaChip (RL for macro placement, used on TPUs) are background, not the plotted task.
+
+**Evidence that this is happening now**
+- OpenAI, [Advancing chip design with our models](https://openai.com/index/advancing-chip-design-with-our-models/) (18 Nov 2026):
+  - Models rewrote SystemVerilog for Jalapeño blocks and for AMD GPU IP, using **Synopsys tools to verify equivalence and evaluate synthesis trade-offs**.
+  - Results: ~15% standard-cell area on individual multiplier/adder redesigns; ~13% (vector unit) and ~10% (matrix unit) across Jalapeño (a team estimate); up to 14% PPA on AMD GPU IP; "roughly a year of progress in under 5 months".
+  - Their RISC-V evals score designs with simulation pass/fail, then IPC × a Yosys-estimated fmax, capped at 16× area. That's exactly the "rung 1" reward below.
+  - Partnering with Synopsys to train "GPT-Synopsys" to use EDA tools. No reward or RL details given.
+  - Floorplanning, place-and-route and analog are not mentioned.
+- Jalapeño went from design to tape-out in 9 months ([OpenAI/Broadcom](https://openai.com/index/openai-broadcom-jalapeno-inference-chip/)).
+- Academic RL on Verilog: [CodeV-R1](https://arxiv.org/abs/2505.24183) (NeurIPS 2025). A 7B model RL-trained against an auto-generated testbench that checks equivalence with a golden reference beats DeepSeek-R1 on RTLLM. Its whole training used ~2.7K A100-hours.
+- Analog: LLM agents with SPICE in the loop ([AnaFlow](https://arxiv.org/abs/2511.03697), [EEsizer](https://arxiv.org/abs/2509.25510), [AaLLM](https://arxiv.org/pdf/2608.13472) from topology to sizing). These are mostly prompting/agent loops, not RL training.
+
+**First-pass ellipses**
+
+| Rung | Reward | Cost per reward | Cost per run (×5M) | Fidelity | Lands |
+|---|---|---|---|---|---|
+| Digital 1: functional + open-source synth | Simulation/equivalence against a reference, plus Yosys area/fmax estimate. Minutes of CPU. | ~$0.001–0.1 | **~$3K–300K** (centre ~$30K) | **0.70–0.85** | Inside the frontier |
+| Digital 2: signoff flow | Commercial synthesis + place-and-route + static timing/power analysis. ~2–20 CPU-hours per block; **licences cost ~3–10× the compute**. | ~$0.3–8 | **~$1.5M–40M** (centre ~$8M) | **0.85–0.95** | Just right of the frontier, near "real robot" |
+| Analog 1: SPICE with corners + Monte Carlo | 100s–10,000s of sims per design, plus a simulator licence | ~$10⁻⁴–1 | **~$500–5M** (centre ~$50K) | **0.50–0.75** | On the fidelity edge of the frontier |
+| Analog 2: post-layout extraction + EM | Needs a layout (automated analog layout is immature); hours of CPU plus licences | ~$0.2–10 | **~$1M–50M** | **0.85–0.92** | Right of the frontier |
+| Analog 3: silicon (MPW shuttle) | ~$5K–100K per design at mature nodes; months of latency | ~$5K–100K | **~$25B–500B** | **~0.95** | Far right |
+
+**Why these heights**
+- **Digital 1 at 0.70–0.85.** Equivalence against a reference is sound for correctness (the OpenAI rewrite case). For "write to spec" it falls back to testbench coverage, like SWE. The synthesis estimate gets area roughly right but timing only roughly, because wires aren't modelled before place-and-route. That is a structural gap, so it counts under principle 1.
+- **Digital 2 at ~0.9.** Signoff analysis is what companies trust before tape-out, so it is close to the real goal. I've left out a silicon rung for digital for simplicity: for digital logic, silicon rarely contradicts signoff on PPA.
+  - Respins are mostly functional bugs, i.e. verification coverage. From memory: Wilson Research reports first-silicon success has fallen to roughly 1 in 7 recently. **Check before citing.** If it holds, it's a strong illustration that functional tests are a leaky reward even with huge investment.
+- **Analog 1 lower than the handoff's 0.75–0.9.** Pre-layout SPICE misses layout parasitics. That's structural, so it counts. It matters modestly for low-frequency analog and a lot for RF and high-speed. Model accuracy at process corners adds more gap.
+- **Analog needs a silicon rung; digital doesn't.** Analog engineers trust post-layout sims less than digital engineers trust signoff.
+
+**Takeaways for the post (Claude's reading)**
+1. **Digital end-to-end is inside the frontier on the cheap rung**, which matches OpenAI's and AMD's results being real and recent. The gains came on arithmetic blocks where equivalence checking gives a sound correctness signal and synthesis area is a good proxy.
+2. **The step to signoff is a cost cliff driven by licences, not compute.** This is a good "opportunities" item: cheaper or open signoff-quality tools (or vendor partnerships, like GPT-Synopsys) would move the expensive rung left. It's also a case where the cost axis depends on *who* is training: an EDA vendor pays no licence fees.
+3. **Analog sits at the frontier's fidelity edge**, and the handoff's point still holds: the bigger bottleneck is access (foundry PDKs under NDA, proprietary designs, closed simulators), which the plot doesn't show.
+
+**To check:** EDA licence economics (AWS and SemiAnalysis sources say licences are 3–10× compute; no public per-seat prices); Yosys runtimes for block-level designs; MPW shuttle prices; the Wilson Research first-silicon figure.
+
+---
+
 ## 2026-11-22: shortlist of unplotted tasks near the frontier (first pass, not yet discussed)
 The frontier runs at roughly fidelity > 0.6 and cost < ~$1.5M per run. Per-reward cost is ×5M to get the cost per run (so $0.01 per reward → $50K per run). All numbers are rough.
 
