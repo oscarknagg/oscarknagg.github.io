@@ -11,6 +11,39 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
 ## Running list: opportunities for the post (section 5)
 - **EDA licences in digital chip signoff (agreed, keep).** The expensive digital rung costs ~4–10× more in licences than in compute: ~$1.5–40M per run, against ~$0.4–4M for the compute alone. This is a disruption opportunity: cheaper or open tools of signoff quality would move the rung left. The hard part is the silicon-correlation data and foundry certification, not the code. See the chip design Q&A below.
 
+## 2026-11-22: remaining tasks, economic value and pay (first pass)
+**Dropped:** "Math/science with checkable answers". It overlaps too much with Math (Lean).
+
+Pay is US. ✓ = confirmed from a BLS page or Gartner during this session; everything else is from memory and needs checking. The wage bill (employment × median) is a rough proxy for how much of the economy a task touches, not the value of automating it.
+
+| Task | Who does it today | Typical US pay | Size of the prize (rough) |
+|---|---|---|---|
+| Law (all tasks below) | Lawyers: ~864K jobs ✓, median **$159,670** (May 2025) ✓ | Big-law associates start ~$225K; partners $1M+ | US lawyer wage bill ≈ **$140B**/yr; global legal services ~$1T |
+| · document review | Contract reviewers, paralegals (median ~$60K) | Contract reviewers ~$30–60/hour | eDiscovery/review ~$15–20B/yr (global) |
+| · drafting, research memos | Associates and partners | $225K → $1M+ | The bulk of transactional and advisory fees |
+| · litigation, strategic counsel | Senior partners, trial lawyers | Billing $1,000–2,500/hour | High value per hour, small share of hours |
+| · negotiation | Lawyers, plus procurement and sales generally | Purchasing managers ~$140K | Spread across the whole economy |
+| Surgery | Surgeons | BLS median **≥$239,200** ✓ (top-coded); surveys ~$400–550K | US surgeon pay ~$30–60B/yr; procedure spending is far larger |
+| Small-molecule drugs + protein binders | Medicinal chemists, biochemists, protein engineers | ~$100–150K (biochemists ~$104K, year unclear) | Pharma R&D ~$250–300B/yr globally; biopharma sales ~$1.5T/yr |
+| Materials (both) | Materials scientists ~8.7K jobs ✓, median **$104,160** ✓ (2024); chemists and materials engineers more broadly | ~$95–110K | Tiny labour pool (~$1B US wages) but huge leverage: batteries, semiconductors, a ~$5T chemicals industry |
+| Security / CTF | Information security analysts, ~180K jobs | Median ~$125K; elite exploit researchers far more | Security spending **$213B** in 2025 ✓ ([Gartner](https://www.gartner.com/en/newsroom/press-releases/2025-07-29-gartner-forecasts-worldwide-end-user-spending-on-information-security-to-total-213-billion-us-dollars-in-2025)) |
+| Trading | Financial analysts 429K jobs ✓, median **$101,910** ✓; quant traders and researchers a small elite | Quant traders ~$200K–$1M+ | Trading revenues in the hundreds of $B/yr, but partly zero-sum |
+| Public policy | Economists ~17.6K jobs ✓, median **$115,440** ✓; budget and policy analysts | ~$85–120K | Small labour pool steering government spending of ~35–40% of GDP |
+| Business strategy | Executives (median ~$206K), management analysts ~1M jobs, median **$101,190** ✓ | Strategy consultants ~$200K+ after an MBA; CEOs far more | Consulting ~$300B/yr globally; leverage on all of corporate capital allocation |
+| Long-term research direction | Senior scientists, research leads, PIs | Computer/information research scientists ~$145K; frontier-AI researchers $1M+ | Global R&D spending ~$2.5–3T/yr |
+
+**Rough ranking by size of prize:**
+1. Research direction, business strategy and public policy: trillions in leverage, but the fidelity of any reward is near zero.
+2. Law: ~$1T.
+3. Drug discovery: ~$250–300B R&D, and a successful drug is worth billions.
+4. Trading and cybersecurity: ~$200B each.
+5. Surgery.
+6. Materials: small labour market, huge downstream leverage.
+
+**Pattern worth considering for the post:** pay and economic value pile up in the low-fidelity, expensive corner of the plot. The handoff's law point generalises: *verifiability runs inversely to billing rate*. Document review (~$30–60/hour) is verifiable; partner judgement ($1,000+/hour) isn't. A side chart of fidelity against pay might make this point compactly.
+
+**Sources confirmed this session:** BLS [lawyers](https://www.bls.gov/ooh/legal/lawyers.htm), [chemists and materials scientists](https://www.bls.gov/ooh/life-physical-and-social-science/chemists-and-materials-scientists.htm), [economists](https://www.bls.gov/ooh/life-physical-and-social-science/economists.htm), [highest-paying occupations](https://www.bls.gov/ooh/highest-paying.htm), [business and financial occupations](https://www.bls.gov/ooh/business-and-financial/). Everything else needs checking.
+
 ## 2026-11-22: chip ladders accepted
 Oscar is happy with the digital (RTL + open synth → signoff) and analog (SPICE → post-layout → silicon) ladders as plotted.
 
