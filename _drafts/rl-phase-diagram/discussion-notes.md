@@ -23,8 +23,34 @@ Running notes for Oscar to review before writing. Newest first. The earlier clau
      - value accrues to whoever owns the expensive validation rung (labs, foundries, signoff tools, trial networks): the *picks and shovels of verification*
    - *Prediction shape:* "the backlog of AI-proposed candidates awaiting validation grows faster than validation capacity".
 5. **Sample efficiency (via RSI) makes RL on real robots and other expensive rewards plausible. And what about ICL / learning to adapt in context?**
-   - *Claude:* there's already evidence that real-robot RL works at *small N*. HIL-SERL (Luo et al. 2024, from memory) learned manipulation tasks to near-100% success in ~1–2.5 hours of real-world training, with demos and human interventions. That suggests **the fixed N = 5M is most pessimistic for robotics**, where strong priors plus demos cut N by orders of magnitude. Worth noting as a limitation of the fixed-N axis.
+   - *Claude:* there's already evidence that real-robot RL works at *small N*. HIL-SERL (Luo et al. 2024; summary below) learned manipulation tasks to near-100% success in ~1–2.5 hours of real-world training, with demos and human interventions. That suggests **the fixed N = 5M is most pessimistic for robotics**, where strong priors plus demos cut N by orders of magnitude. Worth noting as a limitation of the fixed-N axis.
    - **ICL as amortised RL:** a model meta-trained (in sim, across many tasks) to adapt in context turns the expensive real rung from a *training* cost into a *deployment/adaptation* cost with small N. In the framework it moves the real rung left without changing its fidelity.
+
+### HIL-SERL summary ([arXiv 2410.21845](https://arxiv.org/abs/2410.21845); read 2026-11-22, the second half via a model summary)
+- **Paper:** "Precise and Dexterous Robotic Manipulation via Human-in-the-Loop Reinforcement Learning". Jianlan Luo, Charles Xu, Jeffrey Wu, Sergey Levine (UC Berkeley). arXiv Oct 2024 (v3 Mar 2025).
+- **Tasks:** flipping an object in a pan, whipping a Jenga block out of a tower, two-arm handover, assembling a timing belt, a car dashboard, a motherboard and IKEA shelf panels, plus RAM/SSD/USB insertion. One or two arms.
+- **Method:**
+  - Off-policy RL (RLPD), with each batch half demos and half online data.
+  - ~20–30 human demos, plus **human corrective interventions** via a SpaceMouse during training.
+  - Image input from wrist and side cameras through a pretrained ResNet-10, plus proprioception.
+- **Reward:** sparse and binary, "a binary decision on whether a task is successful or not using a trained classifier". The classifier is trained offline from ~5 minutes of collected data. *(In our terms, a learned success detector: fidelity < 1 and gameable in principle; the human supervisor and interventions partly patch that.)*
+- **Cost / sample efficiency:**
+  - "near-perfect success rates and fast cycle times within just 1 to 2.5 hours of training" (timing belt ~6 h)
+  - one RTX 4090
+- **Results:**
+  - ~100% success on all tasks over 100 trials each, vs HG-DAgger (an imitation method) averaging ~50%.
+  - Cycle time 5.4 s vs 9.6 s.
+  - Abstract: "an average 2x improvement in success rate and 1.8x faster execution".
+  - "Our trained RL policies greatly outperform imitation learning methods that are trained on the same amount of human data."
+  - (Some per-baseline numbers have text/table mismatches; check the table before citing.)
+- **Limitations:** short-horizon tasks only, limited randomisation and no tests in unstructured settings, every task trained from scratch.
+
+**What it means for the plot (Claude):**
+- A real-robot task costs **hours of robot time plus a human supervisor**, ~hundreds to a few thousand episodes. That's roughly **$10²–10³ per task**, against ~$16M for our 5M-rollout real-manipulation rung.
+- **The catch is breadth.** HIL-SERL buys one narrow skill per run; a general-purpose robot needs many tasks, which is closer to our N = 5M budget spread across tasks.
+- So it supports two points:
+  1. Fixed N overstates the cost of a *single* real-robot skill by orders of magnitude.
+  2. The open question for robotics is whether sample efficiency *plus* generalisation (pretrained priors, ICL) can make *broad* real-world RL affordable.
 
 ## Standing principles for placing tasks (agreed 2026-11-22)
 1. **Assume harnesses work as intended.** Bugs in a harness or evaluator don't count against fidelity: they're usually easy to fix. Fidelity reflects *structural* gaps between the reward and the goal, such as physics mismatch in sims, proxy vs real outcome, or what a check can't observe even in principle.
